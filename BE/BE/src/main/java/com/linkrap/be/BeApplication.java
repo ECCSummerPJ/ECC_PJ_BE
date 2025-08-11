@@ -1,4 +1,4 @@
-package com.linkrap.BE;
+package com.linkrap.be;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
