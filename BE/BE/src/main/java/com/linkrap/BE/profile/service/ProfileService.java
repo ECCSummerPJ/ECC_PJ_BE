@@ -6,10 +6,15 @@ import com.linkrap.BE.profile.dto.ProfileUpdateRequestDto;
 import com.linkrap.BE.profile.entity.User;
 import com.linkrap.BE.profile.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.linkrap.BE.profile.dto.ProfileUpdateResponseDto;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,18 +28,16 @@ public class ProfileService {
 
     private final UserRepository userRepository;
 
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+
     // 프로필 조회
     @Transactional(readOnly = true)
     public ProfileResponseDto getProfile(Long userId) {
         User u = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. id=" + userId));
 
-        String imageBase64 = null;
-        if (u.getProfileImage() != null && u.getProfileImage().length > 0) {
-            imageBase64 = java.util.Base64.getEncoder().encodeToString(u.getProfileImage());
-        }
-
-        return new ProfileResponseDto(u.getEmail(), u.getNickname(), imageBase64);
+        return new ProfileResponseDto(u.getEmail(), u.getNickname(), u.getProfileImageUrl());
     }
 
 
@@ -96,7 +99,7 @@ public class ProfileService {
         }
 
         userRepository.save(user);
-        ProfileResponseDto profileDto = buildProfileResponseDto(user);
+        ProfileResponseDto profileDto = new ProfileResponseDto(user.getEmail(), user.getNickname(), user.getProfileImageUrl());
 
         // >>> 새로운 DTO 형태로 반환 (hasUpdated + profile)
         return new ProfileUpdateResponseDto(hasUpdated, profileDto);
@@ -113,19 +116,31 @@ public class ProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. id=" + userId));
 
         try {
-            byte[] bytes = file.getBytes();      // ← BLOB 저장용 바이트
-            user.setProfileImage(bytes);         // ← BLOB 필드에 저장
-            userRepository.save(user);           // ← UPDATE 반영
+            // 루트 디렉터리를 절대경로로 고정
+            Path root = Paths.get(uploadDir).toAbsolutePath().normalize();
+            Path dir  = root.resolve("profile-images");
+            Files.createDirectories(dir); // 폴더 없으면 생성
 
-            String base64 = Base64.getEncoder().encodeToString(bytes);
+            String original = file.getOriginalFilename();
+            String ext = (original != null && original.contains(".")) ?
+                    original.substring(original.lastIndexOf(".")) : "";
+            String saved = java.util.UUID.randomUUID() + ext;
 
-            return new ProfileImageUpdateResponseDto(true, base64);
+            Path dest = dir.resolve(saved).toAbsolutePath().normalize(); // 절대경로
+            file.transferTo(dest.toFile());
+
+            String url = "/uploads/profile-images/" + saved; // WebMvcConfig로 서빙됨
+            user.setProfileImageUrl(url);
+            userRepository.save(user);
+
+            return new ProfileImageUpdateResponseDto(true, url);
         } catch (Exception e) {
             throw new IllegalStateException("프로필 이미지 저장에 실패했습니다.", e);
         }
     }
 
 
+    // 닉네임 작성 제한
     private void validateNickname(String nickname) {
         // 1. 공백 불가, 길이 2자 이상 15자 이하
         if (nickname.length() < 2 || nickname.length() > 15) {
@@ -141,6 +156,7 @@ public class ProfileService {
         }
     }
 
+    // 비밀번호 작성 제한
     private void validatePassword(String pw) {
         // 1. 길이 8자 이상 20자 이하, 공백 불가
         if (pw.length() < 8 || pw.length() > 20) {
@@ -163,15 +179,6 @@ public class ProfileService {
         if (kinds < 2) {
             throw new IllegalArgumentException("비밀번호는 영문/숫자/특수문자 중 2가지 이상을 포함해야 합니다.");
         }
-    }
-
-
-    private ProfileResponseDto buildProfileResponseDto(User u) {
-        String base64 = null;
-        if (u.getProfileImage() != null && u.getProfileImage().length > 0) {
-            base64 = Base64.getEncoder().encodeToString(u.getProfileImage());
-        }
-        return new ProfileResponseDto(u.getEmail(), u.getNickname(), base64);
     }
 
 

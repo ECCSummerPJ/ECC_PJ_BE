@@ -20,10 +20,9 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
-    // BLOB
-    @Lob
+    // BLOB 대신 URL
     @Column(name = "profile_image")
-    private byte[] profileImage;
+    private String profileImageUrl;
 
     @Column(nullable = false, length = 50)
     private String nickname;

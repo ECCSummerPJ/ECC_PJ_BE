@@ -8,5 +8,5 @@ import lombok.Getter;
 public class ProfileResponseDto {
     private String email;
     private String nickname;
-    private String profileImage;   // ex) "data:image/png;base64,...." / 이미지 없으면 null
+    private String profileImage;   // Url 그대로
 }
