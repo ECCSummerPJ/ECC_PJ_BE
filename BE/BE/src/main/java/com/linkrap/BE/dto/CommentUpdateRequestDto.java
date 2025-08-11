@@ -1,4 +1,4 @@
-package com.linkrap.BE.comment.dto;
+package com.linkrap.BE.dto;
 
 import lombok.Getter;
 

@@ -1,15 +1,15 @@
-package com.linkrap.BE.profile.service;
+package com.linkrap.BE.service;
 
-import com.linkrap.BE.profile.dto.ProfileImageUpdateResponseDto;
-import com.linkrap.BE.profile.dto.ProfileResponseDto;
-import com.linkrap.BE.profile.dto.ProfileUpdateRequestDto;
-import com.linkrap.BE.profile.entity.User;
-import com.linkrap.BE.profile.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.linkrap.BE.dto.ProfileImageUpdateResponseDto;
+import com.linkrap.BE.dto.ProfileDto;
+import com.linkrap.BE.dto.ProfileUpdateRequestDto;
+import com.linkrap.BE.entity.Users;
+import com.linkrap.BE.repository.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.linkrap.BE.profile.dto.ProfileUpdateResponseDto;
+import com.linkrap.BE.dto.ProfileUpdateResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -18,32 +18,28 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.util.Base64;
-
 
 @Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ProfileService {
 
-    private final UserRepository userRepository;
+    @Autowired UsersRepository usersRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
 
     // 프로필 조회
     @Transactional(readOnly = true)
-    public ProfileResponseDto getProfile(Long userId) {
-        User u = userRepository.findById(userId)
+    public ProfileDto getProfile(int userId) {
+        Users u = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. id=" + userId));
 
-        return new ProfileResponseDto(u.getEmail(), u.getNickname(), u.getProfileImageUrl());
+        return new ProfileDto(u.getEmail(), u.getNickname(), u.getProfileImage());
     }
 
 
     // 닉네임/이메일/비밀번호 변경
-    public ProfileUpdateResponseDto updateProfile(Long userId, ProfileUpdateRequestDto req) {
-        User user = userRepository.findById(userId)
+    public ProfileUpdateResponseDto updateProfile(int userId, ProfileUpdateRequestDto dto) {
+        Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. id=" + userId));
 
         Map<String, Boolean> hasUpdated = new HashMap<>();
@@ -52,15 +48,15 @@ public class ProfileService {
         hasUpdated.put("password", false);
 
         // 닉네임 변경
-        if (req.getNickname() != null && !req.getNickname().isBlank()
-                && !req.getNickname().equals(user.getNickname())) {
+        if (dto.getNickname() != null && !dto.getNickname().isBlank()
+                && !dto.getNickname().equals(user.getNickname())) {
 
             // 닉네임 작성 제한 체크
-            String nickname = req.getNickname().trim(); // 공백 방지
+            String nickname = dto.getNickname().trim(); // 공백 방지
             validateNickname(nickname);
 
             // 중복 체크
-            if (userRepository.existsByNickname(nickname)) {
+            if (usersRepository.existsByNickname(nickname)) {
                 throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
             }
 
@@ -69,37 +65,37 @@ public class ProfileService {
         }
 
         // 이메일 변경
-        if (req.getEmail() != null && !req.getEmail().isBlank()
-                && !req.getEmail().equals(user.getEmail())) {
-            if (userRepository.existsByEmail(req.getEmail())) {
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()
+                && !dto.getEmail().equals(user.getEmail())) {
+            if (usersRepository.existsByEmail(dto.getEmail())) {
                 throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
             }
-            String email = req.getEmail().trim();
+            String email = dto.getEmail().trim();
             user.setEmail(email);
             hasUpdated.put("email", true);
         }
 
         // 비밀번호
-        boolean wantsPwChange = (req.getCurrentPassword() != null && !req.getCurrentPassword().isBlank())
-                || (req.getNewPassword() != null && !req.getNewPassword().isBlank());
+        boolean wantsPwChange = (dto.getCurrentPassword() != null && !dto.getCurrentPassword().isBlank())
+                || (dto.getNewPassword() != null && !dto.getNewPassword().isBlank());
         if (wantsPwChange) {
-            if (req.getCurrentPassword() == null || req.getNewPassword() == null) {
+            if (dto.getCurrentPassword() == null || dto.getNewPassword() == null) {
                 throw new IllegalArgumentException("비밀번호 변경 시 현재/새 비밀번호를 모두 입력하세요.");
             }
-            if (!user.getPassword().equals(req.getCurrentPassword())) {
+            if (!user.getPassword().equals(dto.getCurrentPassword())) {
                 throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
             }
 
             // 비밀번호 작성 제한 체크
-            String newPw = req.getNewPassword();
+            String newPw = dto.getNewPassword();
             validatePassword(newPw);
 
             user.setPassword(newPw); // 학습용: 실제 서비스에서는 반드시 해시!
             hasUpdated.put("password", true);
         }
 
-        userRepository.save(user);
-        ProfileResponseDto profileDto = new ProfileResponseDto(user.getEmail(), user.getNickname(), user.getProfileImageUrl());
+        usersRepository.save(user);
+        ProfileDto profileDto = new ProfileDto(user.getEmail(), user.getNickname(), user.getProfileImage());
 
         // >>> 새로운 DTO 형태로 반환 (hasUpdated + profile)
         return new ProfileUpdateResponseDto(hasUpdated, profileDto);
@@ -107,12 +103,12 @@ public class ProfileService {
 
 
     // 프로필 이미지 변경
-    public ProfileImageUpdateResponseDto updateProfileImage(Long userId, MultipartFile file) {
+    public ProfileImageUpdateResponseDto updateProfileImage(int userId, MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("이미지 파일이 비어 있습니다.");
         }
 
-        User user = userRepository.findById(userId)
+        Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. id=" + userId));
 
         try {
@@ -130,8 +126,8 @@ public class ProfileService {
             file.transferTo(dest.toFile());
 
             String url = "/uploads/profile-images/" + saved; // WebMvcConfig로 서빙됨
-            user.setProfileImageUrl(url);
-            userRepository.save(user);
+            user.setProfileImage(url);
+            usersRepository.save(user);
 
             return new ProfileImageUpdateResponseDto(true, url);
         } catch (Exception e) {

@@ -1,9 +1,9 @@
-package com.linkrap.BE.comment.controller;
+package com.linkrap.BE.api;
 
-import com.linkrap.BE.comment.dto.CommentResponseDto;
-import com.linkrap.BE.comment.dto.CommentUpdateRequestDto;
-import com.linkrap.BE.comment.service.CommentService;
-import com.linkrap.BE.profile.dto.ResponseFormat;
+import com.linkrap.BE.dto.CommentDto;
+import com.linkrap.BE.dto.CommentUpdateRequestDto;
+import com.linkrap.BE.dto.ResponseFormat;
+import com.linkrap.BE.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
 @Tag(name = "댓글 API", description = "댓글 관련 API")
-public class CommentController {
+public class CommentApiController {
 
     private final CommentService commentService;
 
     // 댓글 수정
     @Operation(summary = "댓글 수정")
     @PatchMapping("/{commentId}")
-    public ResponseFormat<CommentResponseDto> update(
-            @PathVariable Long commentId,
-            @RequestParam Long userId, // 임시: 인증 붙기 전
+    public ResponseFormat<CommentDto> update(
+            @PathVariable int commentId,
+            @RequestParam int userId, // 임시: 인증 붙기 전
             @RequestBody CommentUpdateRequestDto req
     ) {
         try {
-            CommentResponseDto dto = commentService.update(commentId, userId, req);
+            CommentDto dto = commentService.update(commentId, userId, req);
             return ResponseFormat.ok("댓글 수정 완료", dto);
         } catch (IllegalArgumentException e) {
             return ResponseFormat.failure(e.getMessage());
@@ -39,8 +39,8 @@ public class CommentController {
     @Operation(summary = "댓글 삭제")
     @DeleteMapping("/{commentId}")
     public ResponseFormat<Void> delete(
-            @PathVariable Long commentId,
-            @RequestParam Long userId // 임시
+            @PathVariable int commentId,
+            @RequestParam int userId // 임시
     ) {
         try {
             commentService.delete(commentId, userId);

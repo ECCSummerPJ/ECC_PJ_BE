@@ -1,11 +1,11 @@
-package com.linkrap.BE.profile.dto;
+package com.linkrap.BE.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ProfileResponseDto {
+public class ProfileDto {
     private String email;
     private String nickname;
     private String profileImage;   // Url 그대로
