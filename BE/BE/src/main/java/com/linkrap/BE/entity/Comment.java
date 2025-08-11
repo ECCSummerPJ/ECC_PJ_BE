@@ -18,11 +18,11 @@ public class Comment {
     private int commentId;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name="user_id")
     private Users authorId;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name="scrap_id")
     private Scrap scrapId;
 
     @Column

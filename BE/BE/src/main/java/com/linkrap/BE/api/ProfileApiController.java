@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/profile")
-@Tag(name = "프로필 API", description = "프로필 관련 API")
+@Tag(name = "profile-controller")
 public class ProfileApiController {
 
     private final ProfileService profileService;

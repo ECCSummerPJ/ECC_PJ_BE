@@ -7,15 +7,16 @@ import com.linkrap.BE.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
-@Tag(name = "댓글 API", description = "댓글 관련 API")
+@Tag(name = "comment-controller")
 public class CommentApiController {
 
-    private final CommentService commentService;
+    @Autowired CommentService commentService;
 
     // 댓글 수정
     @Operation(summary = "댓글 수정")
@@ -23,11 +24,11 @@ public class CommentApiController {
     public ResponseFormat<CommentDto> update(
             @PathVariable int commentId,
             @RequestParam int userId, // 임시: 인증 붙기 전
-            @RequestBody CommentUpdateRequestDto req
+            @RequestBody CommentUpdateRequestDto dto
     ) {
         try {
-            CommentDto dto = commentService.update(commentId, userId, req);
-            return ResponseFormat.ok("댓글 수정 완료", dto);
+            CommentDto d = commentService.update(commentId, userId, dto);
+            return ResponseFormat.ok("댓글 수정 완료", d);
         } catch (IllegalArgumentException e) {
             return ResponseFormat.failure(e.getMessage());
         } catch (Exception e) {
