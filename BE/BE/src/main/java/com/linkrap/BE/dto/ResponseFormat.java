@@ -33,22 +33,27 @@ public class ResponseFormat<T> {
         return new ResponseFormat<>(status, message, data);
     }
 
-    // Convenience method for OK status with data
+    // 요청 정상 처리함
     public static <T> ResponseFormat<T> ok(String message, T data) {
         return ResponseFormat.of(HttpStatus.OK, message, data);
     }
 
-    // Convenience method for creating a success response
-    public static <T> ResponseFormat<T> success(String message, T data) {
-        return ResponseFormat.of(HttpStatus.OK, message, data);
+    // post, put 정상 생성함
+    public static <T> ResponseFormat<T> created(String message, T data) {
+        return ResponseFormat.of(HttpStatus.CREATED, message, data);
     }
 
-    // Convenience method for creating a failure response
+    // 잘못된 문법으로 요청을 보내고 있어 서버가 이해할 수 없음
     public static <T> ResponseFormat<T> failure(String message) {
         return ResponseFormat.of(HttpStatus.BAD_REQUEST, message);
     }
 
-    // Convenience method for creating an error response
+    // 요청한 URL 찾을 수 없음
+    public static <T> ResponseFormat<T> notFound(String message) {
+        return ResponseFormat.of(HttpStatus.NOT_FOUND, message);
+    }
+
+    // 요청은 정상적으로 들어왔으나 서버 문제로 응답할 수 없음
     public static <T> ResponseFormat<T> error(String message) {
         return ResponseFormat.of(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
