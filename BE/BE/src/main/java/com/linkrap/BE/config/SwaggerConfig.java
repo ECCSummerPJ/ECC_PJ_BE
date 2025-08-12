@@ -1,4 +1,4 @@
-package com.linkrap.be.config;
+package com.linkrap.BE.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

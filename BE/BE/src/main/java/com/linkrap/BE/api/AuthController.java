@@ -1,4 +1,4 @@
-package com.linkrap.be.auth.controller;
+package com.linkrap.BE.auth.controller;
 
 import com.linkrap.be.auth.dto.AuthResponse;
 import com.linkrap.be.auth.dto.LoginRequest;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-
+git
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")

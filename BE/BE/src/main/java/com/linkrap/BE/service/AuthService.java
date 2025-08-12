@@ -1,4 +1,4 @@
-package com.linkrap.be.auth.service;
+package com.linkrap.BE.auth.service;
 
 import com.linkrap.be.auth.domain.User;
 import com.linkrap.be.auth.dto.AuthResponse;

@@ -1,5 +1,5 @@
 // src/main/java/com/linkrap/be/config/SecurityBeans.java
-package com.linkrap.be.config;
+package com.linkrap.BE.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

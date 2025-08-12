@@ -1,4 +1,4 @@
-package com.linkrap.be.auth.dto;
+package com.linkrap.BE.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
