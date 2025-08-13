@@ -1,10 +1,11 @@
-package com.linkrap.BE.auth.repository;
+package com.linkrap.BE.repository;
 
-import com.linkrap.be.auth.domain.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.linkrap.BE.domain.User;
+import org.springframework.data.repository.CrudRepository;
+
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
     boolean existsByUserId(String userId);
     boolean existsByEmail(String email);
     Optional<User> findByUserId(String userId);

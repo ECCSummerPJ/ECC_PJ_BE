@@ -1,15 +1,16 @@
-package com.linkrap.BE.auth.dto;
+package com.linkrap.BE.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import jakarta.persistence.Id;
-
-
-public record AuthResponse {
-
-    Long id;
-    String userId;
-    String email;
-    String nickname;
-    String profileImageUrl
-) { }
-
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthResponse {
+    private Long id;
+    private String userId;
+    private String email;
+    private String nickname;
+    private String profileImageUrl;
+}

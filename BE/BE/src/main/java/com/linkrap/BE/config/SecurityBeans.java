@@ -1,4 +1,3 @@
-// src/main/java/com/linkrap/be/config/SecurityBeans.java
 package com.linkrap.BE.config;
 
 import org.springframework.context.annotation.Bean;
@@ -8,8 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SecurityBeans {
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+
     }
-}
+

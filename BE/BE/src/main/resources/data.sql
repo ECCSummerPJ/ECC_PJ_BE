@@ -1,8 +1,20 @@
-INSERT INTO users() VALUES ();
-INSERT INTO users() VALUES ();
+MERGE INTO USERS (USER_ID, EMAIL, PASSWORD_HASH, NICKNAME, PROFILE_IMAGE_URL, CREATED_AT, UPDATED_AT)
+KEY (EMAIL)
+VALUES ('user1',
+        'user1@example.com',
+        '$2a$10$Sn/UwDHKiiu94YuuTI4.RON6fJYYb2pmKTppRrk8M8tgLuVWb.Ote',
+        '화연1',
+        NULL,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP);
 
-INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (1, '고양이', CURRENT_TIMESTAMP(), NULL);
-INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (1, '맛집', CURRENT_TIMESTAMP(), NULL);
-INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (1, '게임', CURRENT_TIMESTAMP(), NULL);
-INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (2, '강아지', CURRENT_TIMESTAMP(), NULL);
-INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (2, '취미', CURRENT_TIMESTAMP(), NULL);
+
+MERGE INTO USERS (USER_ID, EMAIL, PASSWORD_HASH, NICKNAME, PROFILE_IMAGE_URL, CREATED_AT, UPDATED_AT)
+KEY (EMAIL)
+VALUES ('user2',
+        'user2@example.com',
+        '$2a$10$Sn/UwDHKiiu94YuuTI4.RON6fJYYb2pmKTppRrk8M8tgLuVWb.Ote',
+        '화연2',
+        NULL,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP);

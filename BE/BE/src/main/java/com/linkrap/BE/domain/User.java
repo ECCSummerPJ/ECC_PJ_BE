@@ -1,4 +1,4 @@
-package com.linkrap.BE.auth.domain;
+package com.linkrap.BE.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,44 +10,48 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(name="uk_users_user_id", columnNames = "user_id"),
-                @UniqueConstraint(name="uk_users_email", columnNames = "email")
-        })
-@Getter
-@Setter
+@Table(name = "USERS")
+@Getter @Setter
 @NoArgsConstructor
 public class User {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true, length = 20)
+    //로그인용 ID
+    @Column(name = "USER_ID", nullable = false, unique = true, length = 20)
     private String userId;
 
-    @Column(nullable = false, length = 15)
+    @Column(name = "NICKNAME", nullable = false, length = 100)
     private String nickname;
 
-    @Column(nullable = false,unique = true, length = 100)
-    private String email;
-
-    @Column(name="password_hash", nullable = false, length = 100)
+    @Column(name = "PASSWORD_HASH", nullable = false, length = 255)
     private String passwordHash;
 
-    //@Lob
-    //@Column(name = "profile_image")
-    //private byte[] profileImage;
+    @Column(name = "EMAIL", nullable = false,unique = true, length = 100)
+    private String email;
 
-    @Column(name = "profile_image_url", length = 500)
+    @Column(name = "PROFILE_IMAGE_URL", length = 500)
     private String profileImageUrl;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "UPDATED_AT", nullable = false)
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    void onCreate() {
+        var now = LocalDateTime.now();
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
 }
