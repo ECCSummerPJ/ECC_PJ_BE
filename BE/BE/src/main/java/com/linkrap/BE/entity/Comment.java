@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,7 +40,7 @@ public class Comment {
         //예외 발생
         if (dto.getCommentId() != null)
             throw new IllegalArgumentException("댓글 생성 실패! 댓글의 id가 없어야 합니다.");
-        if (dto.getScrapId() != scrap.getScrapId())
+        if (!Objects.equals(dto.getScrapId(), scrap.getScrapId()))
             throw new IllegalArgumentException("댓글 생성 실패! 게시글의 id가 잘못됐습니다.");
         //엔티티 생성 및 반환
         return new Comment(

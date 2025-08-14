@@ -1,7 +1,6 @@
 package com.linkrap.BE.service;
 
 import com.linkrap.BE.dto.CommentDto;
-import com.linkrap.BE.dto.ScrapShowResponseDto;
 import com.linkrap.BE.entity.Comment;
 import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.entity.Users;
