@@ -10,12 +10,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
-    private int categoryId;
+public class CategoryResponseDto {
+    private Integer categoryId;
     private String categoryName;
 
-    public static CategoryDto createCategoryDto(Category category) {
-        return new CategoryDto(
+    public static CategoryResponseDto createCategoryDto(Category category) {
+        return new CategoryResponseDto(
                 category.getCategoryId(),
                 category.getCategoryName()
         );
