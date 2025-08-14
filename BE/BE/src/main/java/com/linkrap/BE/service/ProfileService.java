@@ -82,7 +82,7 @@ public class ProfileService {
             if (dto.getCurrentPassword() == null || dto.getNewPassword() == null) {
                 throw new IllegalArgumentException("비밀번호 변경 시 현재/새 비밀번호를 모두 입력하세요.");
             }
-            if (!user.getPassword().equals(dto.getCurrentPassword())) {
+            if (!user.getPasswordHash().equals(dto.getCurrentPassword())) {
                 throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
             }
 
@@ -90,7 +90,7 @@ public class ProfileService {
             String newPw = dto.getNewPassword();
             validatePassword(newPw);
 
-            user.setPassword(newPw); // 학습용: 실제 서비스에서는 반드시 해시!
+            user.setPasswordHash(newPw); // 학습용: 실제 서비스에서는 반드시 해시!
             hasUpdated.put("password", true);
         }
 

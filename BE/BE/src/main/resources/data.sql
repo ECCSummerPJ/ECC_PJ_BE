@@ -1,19 +1,24 @@
-INSERT INTO users (login_id, email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image, created_at, updated_at)
     VALUES (
     'demo1',
     'demo1@example.com',
     'pw',
     '데모유저1',
-    '/uploads/sample1.png'
+    '/uploads/sample1.png',
+    CURRENT_TIMESTAMP(),
+    NULL
     );
 
-INSERT INTO users (login_id, email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image, created_at, updated_at)
     VALUES (
     'demo2',
     'demo2@example.com',
     'pw',
     '데모유저2',
-    '/uploads/sample2.jpg'
+    '/uploads/sample2.jpg',
+    CURRENT_TIMESTAMP(),
+    NULL
+
     );
 
 INSERT INTO users (login_id, email, password, nickname, profile_image)
@@ -38,7 +43,7 @@ INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public
 INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public, created_at) VALUES (1, 4, '우유', 'https://youtube.com/...', '사모예드는 눈으로 기른다', false, true, CURRENT_TIMESTAMP());
 INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public, created_at) VALUES (1, 1, '치즈', 'https://www.instagram.com/reel/DH4qKa4OCYk/?igsh=aGIxaW5za2xkYjdz', 'cute cat', false, true, CURRENT_TIMESTAMP());
 
-INSERT INTO rescrap(user_id, category_id, scrap_id, redirect_link, created_at) VALUES (2, 1, 1, '/api/scraps/1', CURRENT_TIMESTAMP());
+INSERT INTO rescrap(user_id, category_id, scrap_id, redirect_link, created_at) VALUES (2, 1, 1, '/api/scraps/1', CURRENT_TIMESTAMP(), 5);
 INSERT INTO rescrap(user_id, category_id, scrap_id, redirect_link, created_at) VALUES (2, 1, 3, '/api/scraps/3', CURRENT_TIMESTAMP());
 INSERT INTO rescrap(user_id, category_id, scrap_id, redirect_link, created_at) VALUES (2, 1, 4, '/api/scraps/4', CURRENT_TIMESTAMP());
 

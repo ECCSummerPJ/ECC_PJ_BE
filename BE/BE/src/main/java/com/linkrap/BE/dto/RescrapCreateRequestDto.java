@@ -19,8 +19,8 @@ public class RescrapCreateRequestDto {
     public Rescrap toEntity(Scrap scrap) {
         return Rescrap.builder()
                 .scrapId(scrap)
-                .userId(new Users(userId))
-                .categoryId(new Category(categoryId,new Users(userId),null,null,null))
+                .userId(new Users(userId, null, null, null, null, null, null, null))
+                .categoryId(new Category(categoryId,new Users(userId, null, null, null, null, null, null, null),null,null,null))
                 .redirectLink("/api/scraps/"+scrap.getScrapId())
                 .build();
     }

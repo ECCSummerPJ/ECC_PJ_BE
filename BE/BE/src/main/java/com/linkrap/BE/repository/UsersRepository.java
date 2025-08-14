@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface UsersRepository extends CrudRepository<Users, Integer> {
     // ID, 이메일 중복 체크용
-    boolean existsByUserId(String userId);
+    boolean existsByUserId(Integer loginId);
     boolean existsByEmail(String email);
-    Optional<User> findByUserId(String userId);
+    Optional<User> findByUserId(Integer loginId);
 
     // 닉네임 중복 확인
     boolean existsByNickname(String nickname);

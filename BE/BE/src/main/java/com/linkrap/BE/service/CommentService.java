@@ -54,6 +54,10 @@ public class CommentService {
     public CommentDto update(int commentId, int requestUserId, CommentUpdateRequestDto dto) {
         Comment c = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
+        if (!c.getAuthorId().getUserId().equals(requestUserId)) {
+            throw new IllegalArgumentException("본인 댓글만 수정할 수 있습니다.");
+        }
+
         if (dto.getContent() == null || dto.getContent().isBlank()) {
             throw new IllegalArgumentException("내용을 입력하세요.");
         }

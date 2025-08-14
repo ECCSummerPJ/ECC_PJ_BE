@@ -52,6 +52,9 @@ public class Scrap {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
+    @Column(name="view_count")
+    private Integer viewCount;
+
 
 
     public void patch(ScrapChangeRequestDto dto) {
