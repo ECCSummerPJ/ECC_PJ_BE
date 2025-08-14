@@ -1,12 +1,16 @@
 package com.linkrap.BE.service;
 
-import com.linkrap.BE.dto.RescrapCreateRequestDto;
 import com.linkrap.BE.dto.RescrapCreateResponseDto;
+import com.linkrap.BE.dto.RescrapDto;
 import com.linkrap.BE.dto.RescrapShowResponseDto;
+import com.linkrap.BE.entity.Category;
 import com.linkrap.BE.entity.Rescrap;
 import com.linkrap.BE.entity.Scrap;
+import com.linkrap.BE.entity.Users;
+import com.linkrap.BE.repository.CategoryRepository;
 import com.linkrap.BE.repository.RescrapRepository;
 import com.linkrap.BE.repository.ScrapRepository;
+import com.linkrap.BE.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +26,23 @@ public class RescrapService {
     private final ScrapRepository scrapRepository;
     @Autowired
     private final RescrapRepository rescrapRepository;
+    @Autowired
+    private final CategoryRepository categoryRepository;
+    @Autowired
+    private final UsersRepository usersRepository;
 
-    public RescrapCreateResponseDto create(Integer scrapId, RescrapCreateRequestDto dto) {
+    public RescrapCreateResponseDto create(Integer scrapId, RescrapDto dto) {
+
         //1. 동일한 scrapId 가진 scrap 찾아옴
-        Scrap scrap=scrapRepository.findById(scrapId).orElse(null);
+        Scrap scrap=scrapRepository.findById(scrapId)
+                .orElseThrow(()->new IllegalArgumentException("댓글 생성 실패! "+"대상 게시글이 없습니다."));
+        Users user= usersRepository.findById(dto.getUserId())
+                .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
+        Category category=categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
         //2. dto->엔티티 변환
-        Rescrap rescrap=dto.toEntity(scrap);
-        if(rescrap.getRescrapId()!=null)
-            return null;
+        Rescrap rescrap=Rescrap.createRescrap(dto,scrap,user,category);
+
         //rescrap DB에 저장
         Rescrap saved=rescrapRepository.save(rescrap);
 

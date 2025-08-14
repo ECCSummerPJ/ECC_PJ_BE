@@ -5,13 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="72bfd9a0-3886-4b61-9b87-6536c0506b65" name="Changes" comment="feat: Add login, join api">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/domain/User.java" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/RescrapDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/RescrapController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/RescrapController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/ScrapController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/ScrapController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SecurityBeans.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SecurityBeans.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/AuthResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/JoinForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/JoinForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/RescrapCreateRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapCreateRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Rescrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Rescrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Scrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Scrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/ScrapRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/ScrapRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UsersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UsersRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/ProfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/RescrapService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/RescrapService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/ScrapService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/ScrapService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/resources/data.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +94,7 @@
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "ignore.virus.scanning.warn.message": "true",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",

@@ -1,4 +1,4 @@
-INSERT INTO users (login_id, email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
     VALUES (
     'demo1',
     'demo1@example.com',
@@ -7,7 +7,7 @@ INSERT INTO users (login_id, email, password, nickname, profile_image)
     '/uploads/sample1.png'
     );
 
-INSERT INTO users (login_id, email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
     VALUES (
     'demo2',
     'demo2@example.com',
@@ -16,7 +16,7 @@ INSERT INTO users (login_id, email, password, nickname, profile_image)
     '/uploads/sample2.jpg'
     );
 
-INSERT INTO users (login_id, email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
     VALUES (
     'demo3',
     'demo3@example.com',

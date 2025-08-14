@@ -1,44 +1,60 @@
 package com.linkrap.BE.service;
 
+
 import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.dto.AuthResponse;
 import com.linkrap.BE.dto.JoinForm;
 import com.linkrap.BE.dto.LoginRequest;
-import com.linkrap.BE.repository.UserRepository;
+import com.linkrap.BE.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final UsersRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public AuthResponse join(JoinForm form) {
 
-        if (userRepository.existsByUserId(form.getUserId())) {
+        final String loginId  = form.getLoginId().trim();
+        final String email    = form.getEmail().trim().toLowerCase(Locale.ROOT);
+        final String nickname = form.getNickname().trim();
+
+
+        if (userRepository.existsByLoginId(loginId)) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
-        if (userRepository.existsByEmail(form.getEmail())) {
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
-
 
         if (!form.passwordsMatch()) {
             throw new IllegalArgumentException("비밀번호와 새 비밀번호가 일치하지 않습니다.");
         }
 
 
+        //Users u = new Users();
+
+        //u.setLoginId(form.getLoginId().trim());
+        //u.setEmail(form.getEmail().trim());
+        //u.setNickname(form.getNickname().trim());
+        //u.setPasswordHash(passwordEncoder.encode(form.getPassword())); // 해시 저장
+        //u.setProfileImage(form.getProfileImageUrl());
+
         Users u = new Users();
-        u.setUserId(form.getLoginId().trim());
-        u.setEmail(form.getEmail().trim());
-        u.setNickname(form.getNickname().trim());
-        u.setPasswordHash(passwordEncoder.encode(form.getPassword())); // 해시 저장
-        u.setProfileImageUrl(form.getProfileImageUrl());
+        u.setLoginId(loginId);
+        u.setEmail(email);
+        u.setNickname(nickname);
+        u.setPasswordHash(passwordEncoder.encode(form.getPassword()));
+        u.setProfileImage(form.getProfileImageUrl());
+
 
         Users saved  = userRepository.save(u);
 
@@ -47,17 +63,25 @@ public class AuthService {
                 saved.getLoginId(),
                 saved.getEmail(),
                 saved.getNickname(),
-                saved.getProfileImageUrl()
+                saved.getProfileImage()
         );
     }
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest req) {
-        Users user = userRepository.findByUserId(req.userId().trim())
+        final String loginId = req.loginId().trim(); // LoginRequest가 loginId 필드명이면 .loginId()로 변경
+        final String rawPw   = req.password();
+
+        //Users user = userRepository.findByUserId(req.userId().trim())
+        //Users user = userRepository.findByLoginId(req.loginId().trim())
+        Users user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
 
-        if (!passwordEncoder.matches(req.password(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(rawPw, user.getPasswordHash())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
+
+       // if (!passwordEncoder.matches(req.password(), user.getPasswordHash())) {
+         //   throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
         return new AuthResponse(
@@ -65,7 +89,7 @@ public class AuthService {
                 user.getLoginId(),
                 user.getEmail(),
                 user.getNickname(),
-                user.getProfileImageUrl()
+                user.getProfileImage()
         );
     }
 }
