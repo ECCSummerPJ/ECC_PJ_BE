@@ -2,7 +2,6 @@ package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Rescrap;
-import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.RescrapService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

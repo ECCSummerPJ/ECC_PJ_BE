@@ -3,7 +3,6 @@ package com.linkrap.BE.service;
 import com.linkrap.BE.dto.RescrapCreateRequestDto;
 import com.linkrap.BE.dto.RescrapCreateResponseDto;
 import com.linkrap.BE.dto.RescrapShowResponseDto;
-import com.linkrap.BE.dto.ScrapShowResponseDto;
 import com.linkrap.BE.entity.Rescrap;
 import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.repository.RescrapRepository;

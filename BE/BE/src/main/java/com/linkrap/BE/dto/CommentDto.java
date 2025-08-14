@@ -1,7 +1,6 @@
 package com.linkrap.BE.dto;
 
 import com.linkrap.BE.entity.Comment;
-import com.linkrap.BE.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
