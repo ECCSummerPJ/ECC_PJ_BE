@@ -1,21 +1,24 @@
-INSERT INTO users (email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password, nickname, profile_image)
     VALUES (
+    'demo1',
     'demo1@example.com',
     'pw',
     '데모유저1',
     '/uploads/sample1.png'
     );
 
-INSERT INTO users (email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password, nickname, profile_image)
     VALUES (
+    'demo2',
     'demo2@example.com',
     'pw',
     '데모유저2',
     '/uploads/sample2.jpg'
     );
 
-INSERT INTO users (email, password, nickname, profile_image)
+INSERT INTO users (login_id, email, password, nickname, profile_image)
     VALUES (
+    'demo3',
     'demo3@example.com',
     'pw',
     '데모유저3',
