@@ -1,4 +1,4 @@
-package com.linkrap.BE.auth.domain;
+package com.linkrap.BE.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

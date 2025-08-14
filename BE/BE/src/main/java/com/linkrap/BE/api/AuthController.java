@@ -1,4 +1,4 @@
-package com.linkrap.BE.auth.controller;
+package com.linkrap.BE.controller;
 
 import com.linkrap.be.auth.dto.AuthResponse;
 import com.linkrap.be.auth.dto.LoginRequest;

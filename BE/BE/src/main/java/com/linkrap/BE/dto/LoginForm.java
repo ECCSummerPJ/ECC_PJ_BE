@@ -1,4 +1,4 @@
-package com.linkrap.BE.auth.dto;
+package com.linkrap.BE.dto;
 
 public class LoginForm {
 }

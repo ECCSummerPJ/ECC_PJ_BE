@@ -1,6 +1,6 @@
-package com.linkrap.BE.auth.repository;
+package com.linkrap.BE.repository;
 
-import com.linkrap.be.auth.domain.User;
+import com.linkrap.BE.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

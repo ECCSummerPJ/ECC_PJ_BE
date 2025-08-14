@@ -21,8 +21,8 @@ public class ScrapCreateRequestDto {
 
     public Scrap toEntity() {
         return Scrap.builder()
-                .userId(new Users(userId))
-                .categoryId(new Category(categoryId,new Users(userId),null,null,null))
+                .userId(new Users(userId,null,null,null,null))
+                .categoryId(new Category(categoryId,new Users(userId,null,null,null,null),null,null,null))
                 .scrapTitle(scrapTitle)
                 .scrapLink(scrapLink)
                 .scrapMemo(scrapMemo)
