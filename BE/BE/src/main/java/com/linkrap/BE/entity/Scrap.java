@@ -1,6 +1,8 @@
 package com.linkrap.BE.entity;
 
 import com.linkrap.BE.dto.ScrapChangeRequestDto;
+
+import com.linkrap.BE.dto.ScrapDto;
 import com.linkrap.BE.dto.ScrapFavoriteDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -74,6 +77,25 @@ public class Scrap {
 
     public Integer getCategoryIdValue(){
         return categoryId.getCategoryId();
+    }
+
+    public static Scrap createScrap(ScrapDto dto, Users user, Category category) {
+        //예외 발생
+        if (dto.getScrapId() != null)
+            throw new IllegalArgumentException("스크랩 생성 실패! 스크랩의 id가 없어야 합니다.");
+        //엔티티 생성 및 반환
+        return new Scrap(
+                dto.getScrapId(),
+                user,
+                category,
+                dto.getScrapTitle(),
+                dto.getScrapLink(),
+                dto.getScrapMemo(),
+                dto.isFavorite(),
+                dto.isShowPublic(),
+                dto.getCreatedAt(),
+                dto.getUpdatedAt()
+        );
     }
 
 }

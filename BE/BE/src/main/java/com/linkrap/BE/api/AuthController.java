@@ -1,6 +1,5 @@
 package com.linkrap.BE.api;
 
-/*
 import com.linkrap.BE.dto.AuthResponse;
 import com.linkrap.BE.dto.LoginRequest;
 import com.linkrap.BE.dto.JoinForm;
@@ -37,4 +36,3 @@ public class AuthController {
 
 
 }
- */

@@ -19,7 +19,7 @@ public class RescrapController {
     //리스크랩 생성
     //**자기 스크랩은 리스크랩 못하게 조건 추가해야 함**
     @PostMapping("/scraps/{scrapId}/rescraps")
-    public ResponseFormat<RescrapCreateResponseDto> create(@PathVariable("scrapId") Integer scrapId, @RequestBody RescrapCreateRequestDto dto){
+    public ResponseFormat<RescrapCreateResponseDto> create(@PathVariable("scrapId") Integer scrapId, @RequestBody RescrapDto dto){
         RescrapCreateResponseDto created= rescrapService.create(scrapId, dto);
 
         return (created!=null) ?
