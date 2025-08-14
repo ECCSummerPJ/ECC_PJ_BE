@@ -3,38 +3,40 @@ package com.linkrap.BE.entity;
 import com.linkrap.BE.dto.CommentDto;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Comment {
-    @Id //PK
-    @GeneratedValue(strategy= GenerationType.IDENTITY) //숫자 자동으로 매겨짐
-    @Column(name="comment_id")
-    private Integer commentId;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int commentId;
 
-    @ManyToOne //FK
+    @ManyToOne
     @JoinColumn(name="user_id")
-    private Users user;
+    private Users authorId;
 
-    @ManyToOne //FK
-    @JoinColumn(name="scrap_id") //원본 스크랩
-    private Scrap scrap;
+    @ManyToOne
+    @JoinColumn(name="scrap_id")
+    private Scrap scrapId;
 
-    @Column(name="content")
-    private String commentContent;
+    @Column
+    private String content;
 
-    @Column(name="created_at")
-    @CreationTimestamp
-    private Timestamp createdAt;
+    @Column
+    @CreatedDate
+    private LocalDateTime createdAt;
 
+    @Column
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     public static Comment createComment(CommentDto dto, Scrap scrap, Users user) {
         //예외 발생
@@ -47,9 +49,9 @@ public class Comment {
                 dto.getCommentId(),
                 user,
                 scrap,
-                dto.getCommentContent(),
-                dto.getCreatedAt()
+                dto.getContent(),
+                dto.getCreatedAt(),
+                dto.getUpdatedAt()
         );
-    }
 
 }
