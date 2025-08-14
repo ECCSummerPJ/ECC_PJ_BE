@@ -25,6 +25,15 @@ INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
     '/uploads/sample3.jpg'
     );
 
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
+    VALUES (
+    'demo4',
+    'demo4@example.com',
+    'pw',
+    '데모유저4',
+    '/uploads/sample4.jpg'
+    );
+
 
 INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (1, '고양이', CURRENT_TIMESTAMP(), NULL);
 INSERT INTO category(user_id, category_name, created_at, updated_at) VALUES (1, '맛집', CURRENT_TIMESTAMP(), NULL);
@@ -46,3 +55,7 @@ INSERT INTO comment(user_id, scrap_id, content, created_at, updated_at) VALUES (
 INSERT INTO comment(user_id, scrap_id, content, created_at, updated_at) VALUES (2, 3, '사용자2의 댓글입니다.', CURRENT_TIMESTAMP(), NULL);
 INSERT INTO comment(user_id, scrap_id, content, created_at, updated_at) VALUES (3, 1, '사용자3의 댓글입니다.', CURRENT_TIMESTAMP(), NULL);
 INSERT INTO comment(user_id, scrap_id, content, created_at, updated_at) VALUES (1, 1, '너무 귀여워요!', CURRENT_TIMESTAMP(), NULL);
+
+INSERT INTO friend(user_id, friend_user_id) VALUES (1, 2);
+INSERT INTO friend(user_id, friend_user_id) VALUES (1, 3);
+INSERT INTO friend(user_id, friend_user_id) VALUES (2, 3);
