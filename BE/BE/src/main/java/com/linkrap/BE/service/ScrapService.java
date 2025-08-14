@@ -79,7 +79,7 @@ public class ScrapService {
 
     @Transactional
     public List<ScrapDto> search(String keyword) {
-        List<Scrap> scraps=scrapRepository.findByTitleContaining(keyword);
+        List<Scrap> scraps=scrapRepository.findByScrapTitleContaining(keyword);
         List<ScrapDto> scrapDtoList=new ArrayList<>();
 
         if(scraps.isEmpty()) return scrapDtoList;
