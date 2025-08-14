@@ -33,8 +33,8 @@ public class CategoryService {
     }
 
     //카테고리 목록 조회
-    public List<CategoryResponseDto> categories() {
-        return categoryRepository.findAll()
+    public List<CategoryResponseDto> categories(Integer userId) {
+        return categoryRepository.findByUser_UserId(userId)
                 .stream()
                 .map(CategoryResponseDto::createCategoryResponseDto)
                 .collect(Collectors.toList());

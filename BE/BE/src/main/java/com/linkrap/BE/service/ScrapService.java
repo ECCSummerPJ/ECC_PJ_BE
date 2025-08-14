@@ -2,7 +2,6 @@ package com.linkrap.BE.service;
 
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Category;
-import com.linkrap.BE.entity.Comment;
 import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.repository.CategoryRepository;
@@ -11,12 +10,14 @@ import com.linkrap.BE.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -104,5 +105,35 @@ public class ScrapService {
                 .createdAt(scrap.getCreatedAt())
                 .updatedAt(scrap.getUpdatedAt())
                 .build();
+    }
+
+    //즐겨찾기 및 공개 여부 필터
+    public List<ScrapListDto> getScrapsByFilter(Integer userId,
+                                                Integer categoryId,
+                                                Boolean favorite,
+                                                Boolean showPublic) {
+        //기본 조회
+        Specification<Scrap> spec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("user").get("userId"), userId),
+                        criteriaBuilder.equal(root.get("category").get("categoryId"), categoryId)
+                );
+        //즐겨찾기 필터
+        if (favorite != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("favorite"), favorite)
+            );
+        }
+        //공개여부 필터
+        if (showPublic != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("showPublic"), showPublic)
+            );
+        }
+        //스크랩 목록 반환
+        List<Scrap> filteredScraps = scrapRepository.findAll(spec);
+        return filteredScraps.stream()
+                .map(ScrapListDto::createScrapListDto)
+                .collect(Collectors.toList());
     }
 }

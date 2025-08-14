@@ -1,5 +1,6 @@
 package com.linkrap.BE.dto;
 
+import com.linkrap.BE.entity.Scrap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,9 @@ public class ScrapListDto {
    private boolean favorite;
    private boolean showPublic;
 
-   public static ScrapListDto createScrapListDto(ScrapListDto scraps) {
+   public static ScrapListDto createScrapListDto(Scrap scraps) {
        return new ScrapListDto(
-         scraps.getScrapId(),
+               scraps.getScrapId(),
                scraps.getScrapTitle(),
                scraps.getScrapLink(),
                scraps.getScrapMemo(),

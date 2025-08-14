@@ -1,18 +1,14 @@
 package com.linkrap.BE.repository;
 
-import com.linkrap.BE.dto.StatisticsCategoryItem;
-import com.linkrap.BE.dto.StatisticsScrapItem;
 import com.linkrap.BE.entity.Scrap;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 
-public interface ScrapRepository extends JpaRepository<Scrap, Integer> {
+public interface ScrapRepository extends JpaRepository<Scrap, Integer>, JpaSpecificationExecutor<Scrap> {
 //    // 내 스크랩 중 조회수 순 Top N
 //    @Query("""
 //           select new com.linkrap.BE.dto.StatisticsScrapItem(s.scrapId, s.scrapTitle, s.viewCount)
@@ -35,5 +31,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer> {
 
     //키워드 검색용
     List<Scrap> findByScrapTitleContaining(String keyword);
+
 }
 

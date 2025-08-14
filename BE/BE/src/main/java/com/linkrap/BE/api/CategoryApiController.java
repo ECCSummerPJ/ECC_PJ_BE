@@ -3,7 +3,9 @@ package com.linkrap.BE.api;
 import com.linkrap.BE.dto.CategoryRequestDto;
 import com.linkrap.BE.dto.CategoryResponseDto;
 import com.linkrap.BE.dto.ResponseFormat;
+import com.linkrap.BE.dto.ScrapListDto;
 import com.linkrap.BE.service.CategoryService;
+import com.linkrap.BE.service.ScrapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,8 @@ import java.util.List;
 public class CategoryApiController {
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    ScrapService scrapService;
     //카테고리 생성
     @PostMapping("/api/categories")
     public ResponseFormat<CategoryResponseDto> create(@RequestBody CategoryRequestDto dto) {
@@ -25,7 +29,8 @@ public class CategoryApiController {
     //카테고리 조회
     @GetMapping("/api/categories")
     public ResponseFormat<List<CategoryResponseDto>> categories() {
-        List<CategoryResponseDto> dtos = categoryService.categories();
+        Integer userId = 1; //임시 사용자
+        List<CategoryResponseDto> dtos = categoryService.categories(userId);
         return (dtos!=null) ?
                 ResponseFormat.ok("카테고리 조회 완료", dtos):
                 ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
@@ -44,6 +49,17 @@ public class CategoryApiController {
         CategoryResponseDto deletedDto = categoryService.delete(categoryId);
         return (deletedDto!=null) ?
                 ResponseFormat.ok("카테고리 삭제 완료", deletedDto):
+                ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
+    }
+    //카테고리별 스크랩 목록
+    @GetMapping("/api/categories/{categoryId}/scraps")
+    public ResponseFormat<List<ScrapListDto>> getScraps(@PathVariable Integer categoryId,
+                                                                 @RequestParam(required=false) Boolean favorite,
+                                                                 @RequestParam(required=false) Boolean showPublic){
+        Integer userId = 1; //임시 사용자
+        List<ScrapListDto> dtos = scrapService.getScrapsByFilter(userId, categoryId, favorite, showPublic);
+        return (dtos!=null) ?
+                ResponseFormat.ok("해당 카테고리의 스크랩 조회 완료", dtos):
                 ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
     }
 }
