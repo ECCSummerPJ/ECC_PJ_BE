@@ -1,9 +1,10 @@
-package com.linkrap.BE.auth.controller;
+package com.linkrap.BE.api;
 
-import com.linkrap.be.auth.dto.AuthResponse;
-import com.linkrap.be.auth.dto.LoginRequest;
-import com.linkrap.be.auth.dto.JoinForm;
-import com.linkrap.be.auth.service.AuthService;
+/*
+import com.linkrap.BE.dto.AuthResponse;
+import com.linkrap.BE.dto.LoginRequest;
+import com.linkrap.BE.dto.JoinForm;
+import com.linkrap.BE.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,3 +37,4 @@ public class AuthController {
 
 
 }
+ */

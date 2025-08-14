@@ -9,10 +9,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class ScrapCreateResponseDto {
+public class RescrapCreateResponseDto {
 
     private Integer scrapId;
-    private Integer userId;
+    private Integer rescrapId;
+    private String redirectLink;
     private Timestamp createdAt;
-
 }

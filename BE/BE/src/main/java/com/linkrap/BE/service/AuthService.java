@@ -1,10 +1,10 @@
-package com.linkrap.BE.auth.service;
+package com.linkrap.BE.service;
 
-import com.linkrap.be.auth.domain.User;
-import com.linkrap.be.auth.dto.AuthResponse;
-import com.linkrap.be.auth.dto.JoinForm;
-import com.linkrap.be.auth.dto.LoginRequest;
-import com.linkrap.be.auth.repository.UserRepository;
+import com.linkrap.BE.domain.User;
+import com.linkrap.BE.dto.AuthResponse;
+import com.linkrap.BE.dto.JoinForm;
+import com.linkrap.BE.dto.LoginRequest;
+import com.linkrap.BE.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
