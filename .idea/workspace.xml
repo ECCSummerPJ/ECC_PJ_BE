@@ -5,45 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="72bfd9a0-3886-4b61-9b87-6536c0506b65" name="Changes" comment="feat: Add login, join api">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/BE.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/CategoryApiController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/ScrapController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/CategoryDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/RescrapRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/RescrapResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ResponseFormat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapChangeRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapChangeResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapCreateRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapCreateResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapFavoriteDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Category.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/ReScrap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Scrap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Users.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/CategoryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/ScrapRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UsersRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/CategoryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/ScrapService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/resources/data.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/BeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/BeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SecurityBeans.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SecurityBeans.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SwaggerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/AuthResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/domain/User.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/JoinForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/JoinForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UsersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UsersRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,28 +64,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.BeApplication.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Gradle.BE [:com.linkrap.Be.BeApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BE [:com.linkrap.be.BeApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build BE.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merging be/seoin/login-join&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.BeApplication.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.BE [:com.linkrap.Be.BeApplication.main()].executor": "Run",
+    "Gradle.BE [:com.linkrap.be.BeApplication.main()].executor": "Run",
+    "Gradle.Build BE.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="BeApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.linkrap.be.BeApplication" />

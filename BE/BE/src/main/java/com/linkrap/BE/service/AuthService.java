@@ -1,6 +1,6 @@
 package com.linkrap.BE.service;
 
-import com.linkrap.BE.domain.User;
+import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.dto.AuthResponse;
 import com.linkrap.BE.dto.JoinForm;
 import com.linkrap.BE.dto.LoginRequest;
@@ -33,18 +33,18 @@ public class AuthService {
         }
 
 
-        User u = new User();
-        u.setUserId(form.getUserId().trim());
+        Users u = new Users();
+        u.setUserId(form.getLoginId().trim());
         u.setEmail(form.getEmail().trim());
         u.setNickname(form.getNickname().trim());
         u.setPasswordHash(passwordEncoder.encode(form.getPassword())); // 해시 저장
         u.setProfileImageUrl(form.getProfileImageUrl());
 
-        User saved  = userRepository.save(u);
+        Users saved  = userRepository.save(u);
 
         return new AuthResponse(
-                saved.getId(),
                 saved.getUserId(),
+                saved.getLoginId(),
                 saved.getEmail(),
                 saved.getNickname(),
                 saved.getProfileImageUrl()
@@ -53,7 +53,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest req) {
-        User user = userRepository.findByUserId(req.userId().trim())
+        Users user = userRepository.findByUserId(req.userId().trim())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
 
         if (!passwordEncoder.matches(req.password(), user.getPasswordHash())) {
@@ -61,8 +61,8 @@ public class AuthService {
         }
 
         return new AuthResponse(
-                user.getId(),
                 user.getUserId(),
+                user.getLoginId(),
                 user.getEmail(),
                 user.getNickname(),
                 user.getProfileImageUrl()

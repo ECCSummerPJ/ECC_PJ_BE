@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(name="uk_users_user_id", columnNames = "user_id"),
+                @UniqueConstraint(name="uk_users_login_id", columnNames = "login_id"),
                 @UniqueConstraint(name="uk_users_email", columnNames = "email")
         })
 public class Users {
@@ -36,9 +36,6 @@ public class Users {
     @Column(name="password_hash", nullable = false, length = 100)
     private String passwordHash;
 
-//@Lob
-    //@Column(name = "profile_image")
-    //private byte[] profileImage;
 
     @Column(name = "profile_image", length = 500)
     private String profileImage;

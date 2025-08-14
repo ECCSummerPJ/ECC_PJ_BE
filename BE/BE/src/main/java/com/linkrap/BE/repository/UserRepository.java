@@ -1,11 +1,11 @@
 package com.linkrap.BE.repository;
 
-import com.linkrap.BE.domain.User;
+import com.linkrap.BE.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsByUserId(String userId);
+public interface UserRepository extends JpaRepository<Users, Long> {
+    boolean existsByUserId(String loginId);
     boolean existsByEmail(String email);
-    Optional<User> findByUserId(String userId);
+    Optional<Users> findByUserId(String loginId);
 }
