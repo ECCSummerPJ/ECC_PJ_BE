@@ -12,8 +12,7 @@ import java.sql.Timestamp;
 public class ScrapCreateResponseDto {
 
     private Integer scrapId;
-    private Integer authorId;
+    private Integer userId;
     private Timestamp createdAt;
-
 
 }

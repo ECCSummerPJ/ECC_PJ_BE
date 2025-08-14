@@ -1,4 +1,4 @@
-package com.linkrap.BE.auth.dto;
+package com.linkrap.BE.dto;
 
 import jakarta.validation.constraints.*;
 
@@ -50,4 +50,4 @@ public class JoinForm {
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 }
 
-}
+

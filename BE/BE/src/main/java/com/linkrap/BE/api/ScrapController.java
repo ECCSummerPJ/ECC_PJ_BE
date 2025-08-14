@@ -8,16 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/scraps") //localhost:8080/api/ 이하 요청 처리하는 컨트롤러
+@RequestMapping("/api/scraps") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
 public class ScrapController {
 
     @Autowired
-    private final ScrapService scrapService;
-
-    public ScrapController(ScrapService scrapService) {
-        this.scrapService = scrapService;
-    }
+    private ScrapService scrapService;
 
     //스크랩 생성
     @PostMapping("")
@@ -31,8 +27,8 @@ public class ScrapController {
 
     //스크랩 상세보기
     @GetMapping("/{scrapId}")
-    public ResponseFormat<Scrap> show(@PathVariable Integer scrapId){
-        Scrap showed= scrapService.show(scrapId);
+    public ResponseFormat<ScrapShowResponseDto> show(@PathVariable("scrapId") Integer scrapId){
+        ScrapShowResponseDto showed= scrapService.show(scrapId);
 
         return (showed!=null) ?
                 ResponseFormat.ok("스크랩 조회 성공",showed) :
@@ -41,7 +37,7 @@ public class ScrapController {
 
     //스크랩 수정
     @PatchMapping("/{scrapId}")
-    public ResponseFormat<ScrapChangeResponseDto> update(@PathVariable Integer scrapId, @RequestBody ScrapChangeRequestDto dto){
+    public ResponseFormat<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapChangeRequestDto dto){
         ScrapChangeResponseDto updated=scrapService.update(scrapId, dto);
 
         return (updated!=null) ?
@@ -51,27 +47,23 @@ public class ScrapController {
 
     //스크랩 삭제
     @DeleteMapping("/{scrapId}")
-    public ResponseFormat<Scrap> delete(@PathVariable Integer scrapId){
+    public ResponseFormat<Scrap> delete(@PathVariable("scrapId") Integer scrapId){
         Scrap deleted=scrapService.delete(scrapId);
         return (deleted!=null) ?
-                ResponseFormat.ok("스크랩 수정 성공",null) :
+                ResponseFormat.ok("스크랩 삭제 성공",null) :
                 ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
     }
 
     //즐겨찾기 토글
     @PatchMapping("/{scrapId}/favorite")
-    public ResponseFormat<ScrapFavoriteDto> favorite(@PathVariable Integer scrapId,@RequestBody ScrapFavoriteDto dto){
+    public ResponseFormat<ScrapFavoriteDto> favorite(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapFavoriteDto dto){
         ScrapFavoriteDto favorited=scrapService.favorite(scrapId, dto);
         return (favorited!=null) ?
-                ResponseFormat.ok("스크랩 삭제 성공",favorited) :
+                ResponseFormat.ok("스크랩 즐겨찾기 성공",favorited) :
                 ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
     }
 
-    //리스크랩
-    /*
-    @PostMapping("{scrapId}/rescraps")
-    public ResponseFormat<ReScrap> rescrap(@PathVariable Integer scrapId, @RequestBody RescrapRequestDto dto){
 
-    }
-     */
+
+
 }
