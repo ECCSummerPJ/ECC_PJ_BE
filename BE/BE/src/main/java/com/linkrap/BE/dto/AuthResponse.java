@@ -1,9 +1,9 @@
-package com.linkrap.BE.auth.dto;
+package com.linkrap.BE.dto;
 
 
 import jakarta.persistence.Id;
 
-
+/*
 public record AuthResponse {
 
     Long id;
@@ -12,4 +12,6 @@ public record AuthResponse {
     String nickname;
     String profileImageUrl
 ) { }
+
+ */
 
