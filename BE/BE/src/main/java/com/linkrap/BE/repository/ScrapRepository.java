@@ -1,5 +1,6 @@
 package com.linkrap.BE.repository;
 
+import com.linkrap.BE.dto.ScrapListDto;
 import com.linkrap.BE.dto.StatisticsCategoryItem;
 import com.linkrap.BE.dto.StatisticsScrapItem;
 import com.linkrap.BE.entity.Scrap;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -32,5 +34,7 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer> {
            order by count(s) desc, s.categoryId asc
            """)
     List<StatisticsCategoryItem> findTopCategoriesByUser(@Param("userId") int userId, Pageable pageable);
+
+    List<ScrapListDto> findByUserIdAndCategoryId(Integer userId, Integer categoryId);
 }
 

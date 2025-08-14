@@ -4,47 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="72bfd9a0-3886-4b61-9b87-6536c0506b65" name="Changes" comment="feat: Add login, join api">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/BE.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/CategoryApiController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/ScrapController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/CategoryDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/RescrapRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/RescrapResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ResponseFormat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapChangeRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapChangeResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapCreateRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapCreateResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/ScrapFavoriteDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Category.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/ReScrap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Scrap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/entity/Users.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/CategoryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/ScrapRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UsersRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/CategoryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/ScrapService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BE/BE/src/main/resources/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/BeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/BeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/api/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SecurityBeans.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SecurityBeans.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SwaggerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/AuthResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/JoinForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/JoinForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/dto/LoginRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BE/BE/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/BE/BE/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="1f08c752-3841-4a13-ad80-efa645041d7c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,110 +35,75 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 0
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;sueandcream&quot;
+  }
 }</component>
-  <component name="ProjectId" id="315nHn60CrHuj9vVlaJjujp84Ij" />
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ECCSummerPJ/ECC_PJ_BE.git&quot;,
+    &quot;accountId&quot;: &quot;1029dda0-27fc-4caf-bd42-597474f043e0&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="312MgDi6OmgGwQe5Pc0kdLmAayf" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.BeApplication.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Gradle.BE [:com.linkrap.Be.BeApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BE [:com.linkrap.be.BeApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build BE.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merging be/seoin/login-join&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.BeApplication.executor": "Run",
+    "Gradle.BE [:com.linkrap.BE.BeApplication.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
-    <configuration name="BeApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.linkrap.be.BeApplication" />
+    <configuration name="BeApplication" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.linkrap.BE.BeApplication" />
       <module name="BE.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.linkrap.be.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.BeApplication" />
-      </list>
-    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="72bfd9a0-3886-4b61-9b87-6536c0506b65" name="Changes" comment="" />
-      <created>1754822718017</created>
+      <changelist id="1f08c752-3841-4a13-ad80-efa645041d7c" name="Changes" comment="" />
+      <created>1754717822969</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1754822718017</updated>
+      <updated>1754717822969</updated>
+      <workItem from="1754717824168" duration="212000" />
     </task>
-    <task id="LOCAL-00001" summary="feat: Add login, join api">
-      <option name="closed" value="true" />
-      <created>1754907823719</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1754907823719</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: Add login, join api" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Add login, join api" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/config/SwaggerConfig.java</url>
-          <line>8</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/BE/BE/src/main/java/com/linkrap/BE/BeApplication.java</url>
-          <line>8</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <breakpoint enabled="true" type="java-exception">
-          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
-          <option name="timeStamp" value="5" />
-        </breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
