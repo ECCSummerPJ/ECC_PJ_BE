@@ -35,6 +35,22 @@ public class ScrapService {
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
         Category category=categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
+        //스크랩 작성 제한
+        if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getScrapLink() == null || dto.getScrapLink().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getScrapLink().length() > 255) {
+            throw new IllegalArgumentException("url은 255자 이하여야 합니다.");
+        }
+        if (dto.getScrapMemo() == null || dto.getScrapMemo().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getScrapMemo().length() > 500) {
+            throw new IllegalArgumentException("메모는 500자 이하여야 합니다.");
+        }
         //2. 스크랩 생성
         Scrap scrap=Scrap.createScrap(dto,user,category);
         //3. 스크랩 엔티티를 DB에 저장
@@ -56,6 +72,22 @@ public class ScrapService {
     public ScrapChangeResponseDto update(Integer scrapId, ScrapDto dto){
         //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
+        //스크랩 작성 제한
+        if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getScrapLink() == null || dto.getScrapLink().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getScrapLink().length() > 255) {
+            throw new IllegalArgumentException("url은 255자 이하여야 합니다.");
+        }
+        if (dto.getScrapMemo() == null || dto.getScrapMemo().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getScrapMemo().length() > 500) {
+            throw new IllegalArgumentException("메모는 500자 이하여야 합니다.");
+        }
         //2. 스크랩 수정
         target.patch(dto);
         //3. DB로 갱신
@@ -87,6 +119,13 @@ public class ScrapService {
     @Transactional
     public List<ScrapDto> search(String keyword) {
         List<Scrap> scraps=scrapRepository.findByScrapTitleContaining(keyword);
+        if (keyword == null || keyword.isBlank() || keyword.length() < 2) {
+            throw new IllegalArgumentException("검색어는 2자 이하여야 합니다.");
+        }
+        if (keyword.length() > 30) {
+            throw new IllegalArgumentException("검색어는 30자 이하여야 합니다.");
+        }
+
         List<ScrapDto> scrapDtoList=new ArrayList<>();
 
         if(scraps.isEmpty()) return scrapDtoList;

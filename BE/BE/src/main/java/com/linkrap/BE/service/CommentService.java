@@ -37,6 +37,13 @@ public class CommentService {
         Users user= usersRepository.findById(requestUserId)
                 .orElseThrow(()->new IllegalArgumentException("댓글 생성 실패! "+"대상 생성자가 없습니다."));
 
+        //댓글 작성 제한
+        if (dto.getContent() == null || dto.getContent().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getContent().length() > 300) {
+            throw new IllegalArgumentException("내용은 300자 이하여야 합니다.");
+        }
         Comment comment=Comment.createComment(dto,scrap,user);
         //3. 댓글 엔티티를 DB에 저장
         Comment created=commentRepository.save(comment);
