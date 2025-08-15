@@ -28,12 +28,16 @@ public class Category {
     private Users user;
     @Column
     private String categoryName;
-    @Column
+    @Column(updatable = false)
     @CreatedDate
     private Timestamp createdAt;
     @Column
-    @LastModifiedDate
     private Timestamp updatedAt;
+    @PreUpdate
+    public void onPreUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
+
 
     public static Category createCategory(Users user, CategoryRequestDto dto) {
         return Category.builder()
