@@ -42,5 +42,7 @@ public class FriendApiController {
                 ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
     }
     //친구 스크랩 목록
+    //@GetMapping("/api/friend/{friendUserId}/scraps")
+
 
 }

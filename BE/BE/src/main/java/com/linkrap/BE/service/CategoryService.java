@@ -24,6 +24,9 @@ public class CategoryService {
     public CategoryResponseDto create(int userId, @RequestBody CategoryRequestDto dto) {
         //사용자 조회
         Users loggedInUser = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("등록되지 않은 사용자입니다."));
+        //중복 확인
+        if (categoryRepository.existsByUser_UserIdAndCategoryName(loggedInUser.getUserId(), dto.getCategoryName()))
+            throw new IllegalArgumentException("동일한 이름의 카테고리가 존재합니다.");
         //카테고리 엔티티 생성
         Category category = Category.createCategory(loggedInUser, dto);
         //카테고리 엔티티를 DB에 저장

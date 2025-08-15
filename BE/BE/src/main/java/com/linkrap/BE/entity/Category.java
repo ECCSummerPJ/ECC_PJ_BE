@@ -10,6 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.sql.Timestamp;
 
 @Entity
+@Table(name="category", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "category_name"})
+}) //카테고리 이름 중복 제한
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 @Getter
