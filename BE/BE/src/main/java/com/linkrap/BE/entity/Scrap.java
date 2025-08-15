@@ -1,5 +1,6 @@
 package com.linkrap.BE.entity;
 
+import com.linkrap.BE.dto.JoinForm;
 import com.linkrap.BE.dto.ScrapChangeRequestDto;
 
 import com.linkrap.BE.dto.ScrapDto;
