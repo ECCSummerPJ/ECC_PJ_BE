@@ -1,15 +1,15 @@
 package com.linkrap.BE.service;
 
-import com.linkrap.BE.dto.ProfileImageUpdateResponseDto;
-import com.linkrap.BE.dto.ProfileDto;
-import com.linkrap.BE.dto.ProfileUpdateRequestDto;
+import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Users;
+import com.linkrap.BE.repository.ScrapViewRepository;
 import com.linkrap.BE.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.linkrap.BE.dto.ProfileUpdateResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -23,6 +23,8 @@ import java.util.Map;
 public class ProfileService {
 
     @Autowired UsersRepository usersRepository;
+    @Autowired
+    ScrapViewRepository scrapViewRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -133,6 +135,18 @@ public class ProfileService {
         } catch (Exception e) {
             throw new IllegalStateException("프로필 이미지 저장에 실패했습니다.", e);
         }
+    }
+
+    // 통계
+    @Transactional(readOnly = true)
+    public ProfileStatisticsDto getStatistics(int userId) {
+        Pageable top5 = PageRequest.of(0, 5);
+
+        var topScraps = scrapViewRepository.findTopViewedScrapsByOwner(userId, top5);
+
+        var topCategories = scrapViewRepository.findTopCategoriesByOwner(userId, top5);
+
+        return new ProfileStatisticsDto(topScraps, topCategories);
     }
 
 
