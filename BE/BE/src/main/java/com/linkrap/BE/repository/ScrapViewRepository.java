@@ -18,7 +18,7 @@ public interface ScrapViewRepository extends JpaRepository<ScrapView, Integer> {
         )
         from ScrapView v
         left join v.scrapId s
-        where s.userId.userId = :userId
+        where s.user.userId = :userId
           and v.userId = :userId      
         group by s.scrapId, s.scrapTitle
         order by count(v) desc, s.scrapId desc
@@ -34,8 +34,8 @@ public interface ScrapViewRepository extends JpaRepository<ScrapView, Integer> {
         )
         from ScrapView v
         left join v.scrapId s
-        join s.categoryId c
-        where s.userId.userId = :userId
+        join s.category c
+        where s.user.userId = :userId
           and v.userId = :userId
         group by c.categoryId, c.categoryName
         order by count(v) desc, c.categoryId asc
