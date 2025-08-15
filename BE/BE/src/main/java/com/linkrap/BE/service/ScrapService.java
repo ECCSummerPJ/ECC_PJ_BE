@@ -2,10 +2,7 @@ package com.linkrap.BE.service;
 
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.*;
-import com.linkrap.BE.repository.CategoryRepository;
-import com.linkrap.BE.repository.ScrapRepository;
-import com.linkrap.BE.repository.ScrapViewRepository;
-import com.linkrap.BE.repository.UsersRepository;
+import com.linkrap.BE.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,8 @@ public class ScrapService {
     private final UsersRepository usersRepository;
     @Autowired
     private final ScrapViewRepository scrapViewRepository;
+    @Autowired
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ScrapCreateResponseDto create(ScrapDto dto){
@@ -92,7 +91,7 @@ public class ScrapService {
         //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         //스크랩 작성 제한
-        if (!dto.getUserId().equals(userId)) {
+        if (target.getUserIdValue()!=userId) {
             throw new IllegalArgumentException("본인 스크랩만 수정할 수 있습니다.");
         }
         if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
@@ -124,10 +123,11 @@ public class ScrapService {
     public ScrapDto delete(Integer scrapId, Integer userId) {
         //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
-        if (!target.getUserIdValue().equals(userId)) {
+        if (target.getUserIdValue()!=userId) {
             throw new IllegalArgumentException("본인 스크랩만 삭제할 수 있습니다.");
         }
         //2. 스크랩 삭제
+        commentRepository.deleteComment(scrapId);
         scrapRepository.delete(target);
         //3. 삭제 스크랩을 DTO로 변환 및 반환
         return ScrapDto.createScrapDto(target);
