@@ -52,8 +52,8 @@ public class ScrapService {
 
         //소유자 id 꺼내기
         Integer ownerId = null;
-        if (scrap.getUserId() != null) {            // field 이름이 userId(타입은 Users)
-            ownerId = scrap.getUserId().getUserId(); // 진짜 정수 id
+        if (scrap.getUser() != null) {
+            ownerId = scrap.getUser().getUserId();
         }
 
         //     일단 소유자의 스크랩이 조회되면 소유자 조회수 1 증가로 기록,나중에 로그인 붙이면 requestUserId == ownerId 일 때만 저장하기
