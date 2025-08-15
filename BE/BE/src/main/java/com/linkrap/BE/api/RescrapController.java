@@ -3,6 +3,7 @@ package com.linkrap.BE.api;
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Rescrap;
 import com.linkrap.BE.service.RescrapService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class RescrapController {
 
     //리스크랩 생성
     //**자기 스크랩은 리스크랩 못하게 조건 추가해야 함**
+    @Operation(summary = "리스크랩 생성")
     @PostMapping("/scraps/{scrapId}/rescraps")
     public ResponseFormat<RescrapCreateResponseDto> create(@PathVariable("scrapId") Integer scrapId, @RequestBody RescrapDto dto){
         RescrapCreateResponseDto created= rescrapService.create(scrapId, dto);
@@ -28,6 +30,7 @@ public class RescrapController {
     }
 
     //리스크랩 상세보기
+    @Operation(summary = "리스크랩 상세보기")
     @GetMapping("/rescraps/{rescrapId}")
     public ResponseFormat<RescrapShowResponseDto> show(@PathVariable("rescrapId") Integer rescrapId){
         RescrapShowResponseDto showed= rescrapService.show(rescrapId);
@@ -38,6 +41,7 @@ public class RescrapController {
     }
 
     //리스크랩 삭제
+    @Operation(summary = "리스크랩 삭제")
     @DeleteMapping("/rescraps/{rescrapId}")
     public ResponseFormat<Rescrap> delete(@PathVariable("rescrapId") Integer rescrapId){
         Rescrap deleted=rescrapService.delete(rescrapId);

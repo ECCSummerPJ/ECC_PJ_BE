@@ -29,15 +29,17 @@ public class ScrapService {
     @Autowired
     private final UsersRepository usersRepository;
 
+    @Transactional
     public ScrapCreateResponseDto create(ScrapDto dto){
         Users user= usersRepository.findById(dto.getUserId())
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
         Category category=categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
+        //2. 스크랩 생성
         Scrap scrap=Scrap.createScrap(dto,user,category);
-
-        //DB에 저장
+        //3. 스크랩 엔티티를 DB에 저장
         Scrap saved=scrapRepository.save(scrap);
+        //4. DTO로 변환 및 반환
         return new ScrapCreateResponseDto(saved.getScrapId(),saved.getUserIdValue(),saved.getCreatedAt());
     }
 
@@ -50,23 +52,28 @@ public class ScrapService {
         return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt());
     }
 
-    public ScrapChangeResponseDto update(Integer scrapId, ScrapChangeRequestDto dto){
-
+    @Transactional
+    public ScrapChangeResponseDto update(Integer scrapId, ScrapDto dto){
+        //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
-
+        //2. 스크랩 수정
         target.patch(dto);
-        Scrap updated=scrapRepository.save(target); //db에 저장
+        //3. DB로 갱신
+        Scrap updated=scrapRepository.save(target);
+        scrapRepository.flush();
+        updated=scrapRepository.findById(updated.getScrapId()).orElseThrow();
+        //4. 스크랩 엔티티를 DTO로 변환 및 반환
         return new ScrapChangeResponseDto(updated.getUpdatedAt());
-
     }
 
-    public Scrap delete(Integer scrapId) {
-        Scrap target=scrapRepository.findById(scrapId).orElse(null);
-        if(target==null)
-            return null;
-
+    @Transactional
+    public ScrapDto delete(Integer scrapId) {
+        //1. 스크랩 조회 및 예외 발생
+        Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
+        //2. 스크랩 삭제
         scrapRepository.delete(target);
-        return target;
+        //3. 삭제 스크랩을 DTO로 변환 및 반환
+        return ScrapDto.createScrapDto(target);
     }
 
     public ScrapFavoriteDto favorite(Integer scrapId, ScrapFavoriteDto dto) {

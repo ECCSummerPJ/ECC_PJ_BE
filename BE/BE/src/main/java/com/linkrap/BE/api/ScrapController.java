@@ -3,6 +3,7 @@ package com.linkrap.BE.api;
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.ScrapService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class ScrapController {
     private ScrapService scrapService;
 
     //스크랩 생성
+    @Operation(summary = "스크랩 생성")
     @PostMapping("/scraps")
     public ResponseFormat<ScrapCreateResponseDto> create(@RequestBody ScrapDto dto){
         ScrapCreateResponseDto created=scrapService.create(dto);
@@ -28,6 +30,7 @@ public class ScrapController {
     }
 
     //스크랩 전체 조회
+    @Operation(summary = "스크랩 전체 조회")
     @GetMapping("/scraps")
     public ResponseFormat<List<Scrap>> index(){
         List<Scrap> indexed=scrapService.index();
@@ -38,6 +41,7 @@ public class ScrapController {
     }
 
     //스크랩 상세보기
+    @Operation(summary = "스크랩 상세보기")
     @GetMapping("/scraps/{scrapId}")
     public ResponseFormat<ScrapShowResponseDto> show(@PathVariable("scrapId") Integer scrapId){
         ScrapShowResponseDto showed= scrapService.show(scrapId);
@@ -48,8 +52,9 @@ public class ScrapController {
     }
 
     //스크랩 수정
+    @Operation(summary = "스크랩 수정")
     @PatchMapping("/scraps/{scrapId}")
-    public ResponseFormat<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapChangeRequestDto dto){
+    public ResponseFormat<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapDto dto){
         ScrapChangeResponseDto updated=scrapService.update(scrapId, dto);
 
         return (updated!=null) ?
@@ -58,15 +63,17 @@ public class ScrapController {
     }
 
     //스크랩 삭제
+    @Operation(summary = "스크랩 삭제")
     @DeleteMapping("/scraps/{scrapId}")
     public ResponseFormat<Scrap> delete(@PathVariable("scrapId") Integer scrapId){
-        Scrap deleted=scrapService.delete(scrapId);
+        ScrapDto deleted=scrapService.delete(scrapId);
         return (deleted!=null) ?
                 ResponseFormat.ok("스크랩 삭제 성공",null) :
                 ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
     }
 
     //즐겨찾기 토글
+    @Operation(summary = "스크랩 즐겨찾기 토글")
     @PatchMapping("/scraps/{scrapId}/favorite")
     public ResponseFormat<ScrapFavoriteDto> favorite(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapFavoriteDto dto){
         ScrapFavoriteDto favorited=scrapService.favorite(scrapId, dto);
@@ -77,6 +84,7 @@ public class ScrapController {
 
 
     //키워드 검색
+    @Operation(summary = "스크랩 키워드 검색")
     @GetMapping("/scraps/search?query={keyword}")
     public ResponseFormat<List<ScrapDto>> search(@PathVariable("keyword") String keyword){
         List<ScrapDto> searched=scrapService.search(keyword);
