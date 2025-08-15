@@ -8,5 +8,5 @@ import lombok.Getter;
 public class StatisticsScrapItem {
     private Integer scrapId;
     private String  title;
-    private Integer viewCount;
+    private Long viewCount;
 }

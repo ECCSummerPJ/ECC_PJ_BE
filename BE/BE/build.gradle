@@ -37,3 +37,10 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs << "-parameters"
+}
+
+// jar 이름 고정
+bootJar { archiveFileName = "app.jar" }

@@ -1,0 +1,1 @@
+web: java -Dserver.port=5000 -Dserver.address=0.0.0.0 -jar app.jar

@@ -1,22 +1,22 @@
 package com.linkrap.BE.service;
 
 import com.linkrap.BE.dto.*;
-import com.linkrap.BE.entity.Category;
-import com.linkrap.BE.entity.Comment;
-import com.linkrap.BE.entity.Scrap;
-import com.linkrap.BE.entity.Users;
+import com.linkrap.BE.entity.*;
 import com.linkrap.BE.repository.CategoryRepository;
 import com.linkrap.BE.repository.ScrapRepository;
+import com.linkrap.BE.repository.ScrapViewRepository;
 import com.linkrap.BE.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +28,8 @@ public class ScrapService {
     private final CategoryRepository categoryRepository;
     @Autowired
     private final UsersRepository usersRepository;
+    @Autowired
+    private final ScrapViewRepository scrapViewRepository;
 
     @Transactional
     public ScrapCreateResponseDto create(ScrapDto dto){
@@ -59,20 +61,40 @@ public class ScrapService {
         return new ScrapCreateResponseDto(saved.getScrapId(),saved.getUserIdValue(),saved.getCreatedAt());
     }
 
-    public List<Scrap> index() {
-        return scrapRepository.findAll();
+    public List<ScrapListDto> index() {
+        return scrapRepository.findAllScrap();
     }
 
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
+
+        //소유자 id 꺼내기
+        Integer ownerId = null;
+        if (scrap.getUser() != null) {
+            ownerId = scrap.getUser().getUserId();
+        }
+
+        //     일단 소유자의 스크랩이 조회되면 소유자 조회수 1 증가로 기록,나중에 로그인 붙이면 requestUserId == ownerId 일 때만 저장하기
+        if (ownerId != null) {
+            scrapViewRepository.save(
+                    ScrapView.builder()
+                            .scrapId(scrap)
+                            .userId(ownerId)    // 소유자 id 저장
+                            .build()
+            );
+        }
+
         return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt());
     }
 
     @Transactional
-    public ScrapChangeResponseDto update(Integer scrapId, ScrapDto dto){
+    public ScrapChangeResponseDto update(Integer scrapId, Integer userId, ScrapDto dto){
         //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         //스크랩 작성 제한
+        if (!dto.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인 스크랩만 수정할 수 있습니다.");
+        }
         if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
             throw new IllegalArgumentException("내용을 입력하세요.");
         }
@@ -99,9 +121,12 @@ public class ScrapService {
     }
 
     @Transactional
-    public ScrapDto delete(Integer scrapId) {
+    public ScrapDto delete(Integer scrapId, Integer userId) {
         //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
+        if (!target.getUserIdValue().equals(userId)) {
+            throw new IllegalArgumentException("본인 스크랩만 삭제할 수 있습니다.");
+        }
         //2. 스크랩 삭제
         scrapRepository.delete(target);
         //3. 삭제 스크랩을 DTO로 변환 및 반환
@@ -117,8 +142,8 @@ public class ScrapService {
     }
 
     @Transactional
-    public List<ScrapDto> search(String keyword) {
-        List<Scrap> scraps=scrapRepository.findByScrapTitleContaining(keyword);
+    public List<ScrapListDto> search(String keyword) {
+        List<ScrapListDto> scrapDtoList=scrapRepository.findByScrapTitleContaining(keyword);
         if (keyword == null || keyword.isBlank() || keyword.length() < 2) {
             throw new IllegalArgumentException("검색어는 2자 이하여야 합니다.");
         }
@@ -126,29 +151,47 @@ public class ScrapService {
             throw new IllegalArgumentException("검색어는 30자 이하여야 합니다.");
         }
 
-        List<ScrapDto> scrapDtoList=new ArrayList<>();
-
+        //List<ScrapListDto> scrapDtoList=new ArrayList<>();
+        /*
         if(scraps.isEmpty()) return scrapDtoList;
 
         for(Scrap scrap : scraps){
             scrapDtoList.add(this.entityToDto(scrap));
         }
 
+         */
+        //scrapDtoList.isEmpty() 이면 검색 결과 없음
         return scrapDtoList;
     }
 
-    private ScrapDto entityToDto(Scrap scrap) {
-        return ScrapDto.builder()
-                .scrapId(scrap.getScrapId())
-                .userId(scrap.getUserIdValue())
-                .categoryId(scrap.getCategoryIdValue())
-                .scrapTitle(scrap.getScrapTitle())
-                .scrapLink(scrap.getScrapLink())
-                .scrapMemo(scrap.getScrapMemo())
-                .favorite(scrap.isFavorite())
-                .showPublic(scrap.isShowPublic())
-                .createdAt(scrap.getCreatedAt())
-                .updatedAt(scrap.getUpdatedAt())
-                .build();
+
+    //즐겨찾기 및 공개 여부 필터
+    public List<ScrapListDto> getScrapsByFilter(Integer userId,
+                                                Integer categoryId,
+                                                Boolean favorite,
+                                                Boolean showPublic) {
+        //기본 조회
+        Specification<Scrap> spec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("user").get("userId"), userId),
+                        criteriaBuilder.equal(root.get("category").get("categoryId"), categoryId)
+                );
+        //즐겨찾기 필터
+        if (favorite != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("favorite"), favorite)
+            );
+        }
+        //공개여부 필터
+        if (showPublic != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("showPublic"), showPublic)
+            );
+        }
+        //스크랩 목록 반환
+        List<Scrap> filteredScraps = scrapRepository.findAll(spec);
+        return filteredScraps.stream()
+                .map(ScrapListDto::createScrapListDto)
+                .collect(Collectors.toList());
     }
 }

@@ -7,6 +7,8 @@ import com.linkrap.BE.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,13 +22,13 @@ public class CommentController {
     //댓글 생성
     @Operation(summary = "댓글 생성")
     @PostMapping("/{scrapId}/comments")
-    public ResponseFormat<CommentDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentDto dto){
+    public ResponseEntity<CommentDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentDto dto){
         //서비스에 위임
         CommentDto createdDto=commentService.create(scrapId, userId, dto);
         //결과 응답
         return (createdDto!=null) ?
-                ResponseFormat.ok("댓글 생성 성공",createdDto) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(createdDto) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }

@@ -28,11 +28,11 @@ public class Scrap {
 
     @ManyToOne //FK
     @JoinColumn(name="user_id")
-    private Users userId;
+    private Users user;
 
     @ManyToOne //FK
     @JoinColumn(name="category_id")
-    private Category categoryId;
+    private Category category;
 
     @Column(name="title")
     private String scrapTitle;
@@ -74,11 +74,11 @@ public class Scrap {
 
 
     public Integer getUserIdValue() {
-        return userId.getUserId();
+        return user.getUserId();
     }
 
     public Integer getCategoryIdValue(){
-        return categoryId.getCategoryId();
+        return category.getCategoryId();
     }
 
     public static Scrap createScrap(ScrapDto dto, Users user, Category category) {
