@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,35 +23,35 @@ public class CommentApiController {
     // 댓글 수정
     @Operation(summary = "댓글 수정")
     @PatchMapping("/{commentId}")
-    public ResponseFormat<CommentDto> update(
+    public ResponseEntity<CommentDto> update(
             @PathVariable int commentId,
             @RequestParam int userId, // 임시: 인증 붙기 전
             @RequestBody CommentUpdateRequestDto dto
     ) {
         try {
             CommentDto d = commentService.update(commentId, userId, dto);
-            return ResponseFormat.ok("댓글 수정 완료", d);
+            return ResponseEntity.status(HttpStatus.OK).body(d);
         } catch (IllegalArgumentException e) {
-            return ResponseFormat.failure(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            return ResponseFormat.error("서버 내부 오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     // 댓글 삭제
     @Operation(summary = "댓글 삭제")
     @DeleteMapping("/{commentId}")
-    public ResponseFormat<Void> delete(
+    public ResponseEntity<Void> delete(
             @PathVariable int commentId,
             @RequestParam int userId // 임시
     ) {
         try {
             commentService.delete(commentId, userId);
-            return ResponseFormat.ok("댓글 삭제 완료", null);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (IllegalArgumentException e) {
-            return ResponseFormat.failure(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            return ResponseFormat.error("서버 내부 오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
