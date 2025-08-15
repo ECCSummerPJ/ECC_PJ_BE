@@ -34,6 +34,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer> {
 //    List<StatisticsCategoryItem> findTopCategoriesByUser(@Param("userId") int userId, Pageable pageable);
 
     //키워드 검색용
-    List<Scrap> findByTitleContaining(String keyword);
+    List<Scrap> findByScrapTitleContaining(String keyword);
 }
 

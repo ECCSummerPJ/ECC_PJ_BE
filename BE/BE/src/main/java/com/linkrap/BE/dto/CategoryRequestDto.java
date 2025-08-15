@@ -6,18 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+
+
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
-    private int categoryId;
+public class CategoryRequestDto {
     private String categoryName;
 
-    public static CategoryDto createCategoryDto(Category category) {
-        return new CategoryDto(
-                category.getCategoryId(),
-                category.getCategoryName()
-        );
-    }
 }
