@@ -63,7 +63,7 @@ public class CommentService {
     public CommentDto update(int commentId, int requestUserId, CommentUpdateRequestDto dto) {
         Comment c = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        if (!c.getAuthorId().getUserId().equals(requestUserId)) {
+        if (!c.getAuthor().getUserId().equals(requestUserId)) {
             throw new IllegalArgumentException("본인 댓글만 수정할 수 있습니다.");
         }
 
@@ -85,7 +85,7 @@ public class CommentService {
     public void delete(int commentId, int requestUserId) {
         Comment c = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-        if (!c.getAuthorId().getUserId().equals(requestUserId)) {
+        if (!c.getAuthor().getUserId().equals(requestUserId)) {
             throw new IllegalArgumentException("본인 댓글만 삭제할 수 있습니다.");
         }
         commentRepository.delete(c);
