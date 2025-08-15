@@ -2,6 +2,7 @@ package com.linkrap.BE.repository;
 
 import com.linkrap.BE.dto.StatisticsCategoryItem;
 import com.linkrap.BE.dto.StatisticsScrapItem;
+import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.entity.ScrapView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -43,4 +44,6 @@ public interface ScrapViewRepository extends JpaRepository<ScrapView, Integer> {
     List<StatisticsCategoryItem> findTopCategoriesByOwner(
             @Param("userId") int userId, Pageable pageable
     );
+
+
 }

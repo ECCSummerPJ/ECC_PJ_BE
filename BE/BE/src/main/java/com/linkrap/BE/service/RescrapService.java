@@ -54,12 +54,15 @@ public class RescrapService {
         return new RescrapShowResponseDto(rescrap.getRedirectLink());
     }
 
-    public Rescrap delete(Integer rescrapId) {
-        Rescrap target=rescrapRepository.findById(rescrapId).orElse(null);
-        if(target==null)
-            return null;
-
+    public RescrapDto delete(Integer rescrapId, Integer userId) {
+        //1. 리스크랩 조회 및 예외 발생
+        Rescrap target=rescrapRepository.findById(rescrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+rescrapId));
+        if (!target.getUserIdValue().equals(userId)) {
+            throw new IllegalArgumentException("본인 리스크랩만 삭제할 수 있습니다.");
+        }
+        //2. 리스크랩 삭제
         rescrapRepository.delete(target);
-        return target;
+        //3. 삭제 리스크랩을 DTO로 변환 및 반환
+        return RescrapDto.createRescrapDto(target);
     }
 }
