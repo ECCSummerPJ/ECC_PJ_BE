@@ -1,19 +1,24 @@
-INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image, created_at, updated_at)
     VALUES (
     'demo1',
     'demo1@example.com',
     'pw',
     '데모유저1',
-    '/uploads/sample1.png'
+    '/uploads/sample1.png',
+    CURRENT_TIMESTAMP(),
+    NULL
     );
 
-INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
+INSERT INTO users (login_id, email, password_hash, nickname, profile_image, created_at, updated_at)
     VALUES (
     'demo2',
     'demo2@example.com',
     'pw',
     '데모유저2',
-    '/uploads/sample2.jpg'
+    '/uploads/sample2.jpg',
+    CURRENT_TIMESTAMP(),
+    NULL
+
     );
 
 INSERT INTO users (login_id, email, password_hash, nickname, profile_image)

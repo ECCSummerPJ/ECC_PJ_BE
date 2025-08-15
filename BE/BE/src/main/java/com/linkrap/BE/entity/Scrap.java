@@ -57,6 +57,7 @@ public class Scrap {
 
 
 
+
     public void patch(ScrapChangeRequestDto dto) {
         if(dto.getScrapTitle()!=null)
             this.scrapTitle=dto.getScrapTitle();

@@ -64,4 +64,17 @@ public class ProfileApiController {
         }
     }
 
+    // 통계
+    @Operation(summary = "프로필 통계 (전체기간, TOP5)")
+    @GetMapping("/statistics")
+    public ResponseFormat<ProfileStatisticsDto> getStatistics(@RequestParam int userId) {
+        try {
+            ProfileStatisticsDto dto = profileService.getStatistics(userId);
+            return ResponseFormat.ok("통계 조회 성공", dto);
+        } catch (IllegalArgumentException e) {
+            return ResponseFormat.failure(e.getMessage());
+        } catch (Exception e) {
+            return ResponseFormat.error("서버 내부 오류");
+        }
+    }
 }
