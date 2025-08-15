@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 @Tag(name = "comment-controller")
 public class CommentApiController {

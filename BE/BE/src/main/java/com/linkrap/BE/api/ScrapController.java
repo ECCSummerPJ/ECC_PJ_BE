@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
 public class ScrapController {
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/scraps") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
+@RequestMapping("/scraps") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
 public class CommentController {
     @Autowired

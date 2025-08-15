@@ -19,7 +19,7 @@ public class FriendApiController {
 
     //친구 조회
     @Operation(summary = "친구 목록 조회", description = "로그인한 사용자가 추가한 친구 목록 반환")
-    @GetMapping("/api/friends")
+    @GetMapping("/friends")
     public ResponseFormat<List<FriendResponseDto>> friends(){
         Integer userId = 1; //임시 사용자
         List<FriendResponseDto> dtos = friendService.friends(userId);
@@ -30,7 +30,7 @@ public class FriendApiController {
 
     //친구 등록
     @Operation(summary = "친구 등록", description = "입력 받은 ID의 사용자를, 로그인한 사용자의 친구로 추가")
-    @PostMapping("/api/friends")
+    @PostMapping("/friends")
     public ResponseFormat<FriendResponseDto> create(@RequestBody FriendRequestDto dto){
         Integer userId = 1; //임시 사용자
         FriendResponseDto createdDto = friendService.create(userId, dto);
@@ -40,7 +40,7 @@ public class FriendApiController {
     }
     //친구 해제
     @Operation(summary = "친구 해제", description = "로그인한 사용자가 추가한 친구 관계를 삭제")
-    @DeleteMapping("/api/friends/{friendshipId}")
+    @DeleteMapping("/friends/{friendshipId}")
     public ResponseFormat<FriendResponseDto> delete(@PathVariable Integer friendshipId){
         FriendResponseDto deletedDto = friendService.delete(friendshipId);
         return (deletedDto!=null) ?
@@ -48,7 +48,7 @@ public class FriendApiController {
                 ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
     }
     //친구 스크랩 목록
-    //@GetMapping("/api/friend/{friendUserId}/scraps")
+    //@GetMapping("/friend/{friendUserId}/scraps")
 
 
 }
