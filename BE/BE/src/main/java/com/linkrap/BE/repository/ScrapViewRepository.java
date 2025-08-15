@@ -11,36 +11,36 @@ import java.util.List;
 
 public interface ScrapViewRepository extends JpaRepository<ScrapView, Integer> {
 
-    // 내 스크랩 중, 내가 열람한 횟수 기준 TOP N
+    // 조회수 0도 포함하여 소유자 스크랩 TOP N
     @Query("""
-        select new com.linkrap.BE.dto.StatisticsScrapItem(
-            s.scrapId, s.scrapTitle, count(v)
-        )
-        from ScrapView v
-        left join v.scrapId s
-        where s.user.userId = :userId
-          and v.userId = :userId      
-        group by s.scrapId, s.scrapTitle
-        order by count(v) desc, s.scrapId desc
-    """)
-    List<StatisticsScrapItem> findTopViewedScrapsByOwner(
-            @Param("userId") int userId, Pageable pageable
-    );
+    select new com.linkrap.BE.dto.StatisticsScrapItem(
+        s.scrapId, s.scrapTitle, count(v.scrapViewId)
+    )
+    from Scrap s
+    left join ScrapView v
+        on v.scrapId.scrapId = s.scrapId
+       and v.userId        = :userId
+    where s.user.userId    = :userId
+    group by s.scrapId, s.scrapTitle
+    order by count(v.scrapViewId) desc, s.scrapId desc
+""")
+    List<StatisticsScrapItem> findTopViewedScrapsByOwner(@Param("userId") int userId, Pageable pageable);
 
-    // 내 스크랩을 카테고리로 묶어, 내가 본 횟수 합계 TOP N
+    // 조회수 0도 포함하여 소유자 카테고리 TOP N
     @Query("""
-        select new com.linkrap.BE.dto.StatisticsCategoryItem(
-            c.categoryId, c.categoryName, count(v)
-        )
-        from ScrapView v
-        left join v.scrapId s
-        join s.category c
-        where s.user.userId = :userId
-          and v.userId = :userId
-        group by c.categoryId, c.categoryName
-        order by count(v) desc, c.categoryId asc
-    """)
-    List<StatisticsCategoryItem> findTopCategoriesByOwner(
-            @Param("userId") int userId, Pageable pageable
-    );
+    select new com.linkrap.BE.dto.StatisticsCategoryItem(
+        c.categoryId, c.categoryName, count(v.scrapViewId)
+    )
+    from Category c
+    left join Scrap s
+        on s.category.categoryId = c.categoryId
+       and s.user.userId         = :userId
+    left join ScrapView v
+        on v.scrapId.scrapId      = s.scrapId
+       and v.userId               = :userId
+    where c.user.userId           = :userId
+    group by c.categoryId, c.categoryName
+    order by count(v.scrapViewId) desc, c.categoryId asc
+""")
+    List<StatisticsCategoryItem> findTopCategoriesByOwner(@Param("userId") int userId, Pageable pageable);
 }
