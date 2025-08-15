@@ -1,12 +1,10 @@
 package com.linkrap.BE.service;
 
 import com.linkrap.BE.dto.*;
-import com.linkrap.BE.entity.Category;
-import com.linkrap.BE.entity.Comment;
-import com.linkrap.BE.entity.Scrap;
-import com.linkrap.BE.entity.Users;
+import com.linkrap.BE.entity.*;
 import com.linkrap.BE.repository.CategoryRepository;
 import com.linkrap.BE.repository.ScrapRepository;
+import com.linkrap.BE.repository.ScrapViewRepository;
 import com.linkrap.BE.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +26,8 @@ public class ScrapService {
     private final CategoryRepository categoryRepository;
     @Autowired
     private final UsersRepository usersRepository;
+    @Autowired
+    private final ScrapViewRepository scrapViewRepository;
 
     public ScrapCreateResponseDto create(ScrapDto dto){
         Users user= usersRepository.findById(dto.getUserId())
@@ -47,6 +47,23 @@ public class ScrapService {
 
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
+
+        //소유자 id 꺼내기
+        Integer ownerId = null;
+        if (scrap.getUserId() != null) {            // field 이름이 userId(타입은 Users)
+            ownerId = scrap.getUserId().getUserId(); // 진짜 정수 id
+        }
+
+        //     일단 소유자의 스크랩이 조회되면 소유자 조회수 1 증가로 기록,나중에 로그인 붙이면 requestUserId == ownerId 일 때만 저장하기
+        if (ownerId != null) {
+            scrapViewRepository.save(
+                    ScrapView.builder()
+                            .scrapId(scrap)
+                            .userId(ownerId)    // 소유자 id 저장
+                            .build()
+            );
+        }
+
         return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt());
     }
 
