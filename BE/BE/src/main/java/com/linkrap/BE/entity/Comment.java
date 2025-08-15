@@ -3,6 +3,7 @@ package com.linkrap.BE.entity;
 import com.linkrap.BE.dto.CommentDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,7 +18,8 @@ import java.util.Objects;
 @Builder
 public class Comment {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int commentId;
+    @Column(name="comment_id")
+    private Integer commentId;
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -31,7 +33,7 @@ public class Comment {
     private String content;
 
     @Column
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column
@@ -42,7 +44,7 @@ public class Comment {
         //예외 발생
         if (dto.getCommentId() != null)
             throw new IllegalArgumentException("댓글 생성 실패! 댓글의 id가 없어야 합니다.");
-        if (!Objects.equals(dto.getScrapId(), scrap.getScrapId()))
+        if (dto.getScrapId()!=scrap.getScrapId())
             throw new IllegalArgumentException("댓글 생성 실패! 게시글의 id가 잘못됐습니다.");
         //엔티티 생성 및 반환
         return new Comment(

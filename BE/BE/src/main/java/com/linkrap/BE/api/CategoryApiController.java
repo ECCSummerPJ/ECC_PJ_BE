@@ -9,6 +9,8 @@ import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,51 +25,60 @@ public class CategoryApiController {
     //카테고리 생성
     @Operation(summary = "카테고리 생성", description = "카테고리 이름 설정 가능")
     @PostMapping("/api/categories")
-    public ResponseFormat<CategoryResponseDto> create(@RequestBody CategoryRequestDto dto) {
+    public ResponseEntity<CategoryResponseDto> create(@RequestBody CategoryRequestDto dto) {
         int userId = 1; //임시 사용자
         CategoryResponseDto createdDto = categoryService.create(userId, dto);
         return (createdDto!=null) ?
-                ResponseFormat.ok("카테고리 생성 완료", createdDto):
-                ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(createdDto) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     //카테고리 조회
     @Operation(summary = "카테고리 목록 조회", description = "로그인한 사용자가 만든 카테고리 목록 반환")
     @GetMapping("/api/categories")
-    public ResponseFormat<List<CategoryResponseDto>> categories() {
+    public ResponseEntity<List<CategoryResponseDto>> categories() {
         Integer userId = 1; //임시 사용자
         List<CategoryResponseDto> dtos = categoryService.categories(userId);
         return (dtos!=null) ?
-                ResponseFormat.ok("카테고리 조회 완료", dtos):
-                ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(dtos) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     //카테고리 이름 수정
     @Operation(summary = "카테고리 이름 수정", description = "경로변수로 받은 ID의 카테고리 이름 변경")
     @PatchMapping("/api/categories/{categoryId}")
-    public ResponseFormat<CategoryResponseDto> update(@PathVariable Integer categoryId, @RequestBody CategoryRequestDto dto){
+    public ResponseEntity<CategoryResponseDto> update(@PathVariable Integer categoryId, @RequestBody CategoryRequestDto dto){
         CategoryResponseDto updatedDto = categoryService.update(categoryId, dto);
         return (updatedDto!=null) ?
-                ResponseFormat.ok("카테고리 이름 수정 완료", updatedDto):
-                ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(updatedDto) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     //카테고리 삭제
     @Operation(summary = "카테고리 삭제", description = "경로변수로 받은 ID의 카테고리 삭제")
     @DeleteMapping("/api/categories/{categoryId}")
-    public ResponseFormat<CategoryResponseDto> delete(@PathVariable Integer categoryId){
+    public ResponseEntity<CategoryResponseDto> delete(@PathVariable Integer categoryId){
         CategoryResponseDto deletedDto = categoryService.delete(categoryId);
         return (deletedDto!=null) ?
-                ResponseFormat.ok("카테고리 삭제 완료", deletedDto):
-                ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(deletedDto) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     //카테고리별 스크랩 목록
     @Operation(summary = "카테고리별 스크랩 목록", description = "경로변수로 받은 ID의 카테고리로 설정된 스크랩 게시글 목록 반환")
     @GetMapping("/api/categories/{categoryId}/scraps")
-    public ResponseFormat<List<ScrapListDto>> getScraps(@PathVariable Integer categoryId,
+    public ResponseEntity<List<ScrapListDto>> getScraps(@PathVariable Integer categoryId,
                                                                  @RequestParam(required=false) Boolean favorite,
                                                                  @RequestParam(required=false) Boolean showPublic){
         Integer userId = 1; //임시 사용자
-        List<ScrapListDto> dtos = scrapService.getScrapsByFilter(userId, categoryId, favorite, showPublic);
-        return (dtos!=null) ?
-                ResponseFormat.ok("해당 카테고리의 스크랩 조회 완료", dtos):
-                ResponseFormat.failure("요청 형식이 올바르지 않습니다.");
+        if(categoryId==0){
+            List<ScrapListDto> dtos = scrapService.index();
+            return (dtos!=null) ?
+                    ResponseEntity.status(HttpStatus.OK).body(dtos) :
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else {
+            List<ScrapListDto> dtos = scrapService.getScrapsByFilter(userId, categoryId, favorite, showPublic);
+            return (dtos!=null) ?
+                    ResponseEntity.status(HttpStatus.OK).body(dtos) :
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 }

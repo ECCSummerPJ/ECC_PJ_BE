@@ -1,15 +1,13 @@
 package com.linkrap.BE.dto;
 
 import com.linkrap.BE.entity.Scrap;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ScrapListDto {
    private Integer scrapId;
    private String scrapTitle;

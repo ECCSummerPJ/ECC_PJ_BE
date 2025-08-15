@@ -22,15 +22,15 @@ public class Rescrap {
 
     @ManyToOne //FK
     @JoinColumn(name="user_id")
-    private Users userId;
+    private Users user;
 
     @ManyToOne //FK
     @JoinColumn(name="category_id")
-    private Category categoryId;
+    private Category category;
 
     @ManyToOne //FK
     @JoinColumn(name="scrap_id") //원본 스크랩
-    private Scrap scrapId;
+    private Scrap scrap;
 
     @Column(name="redirect_link") //리다이렉트되는 링크 (원래 스크랩으로 연결됨)
     private String redirectLink;
@@ -40,7 +40,15 @@ public class Rescrap {
     private Timestamp createdAt;
 
     public Integer getScrapIdValue() {
-        return scrapId.getScrapId();
+        return scrap.getScrapId();
+    }
+
+    public Integer getUserIdValue() {
+        return user.getUserId();
+    }
+
+    public Integer getCategoryIdValue() {
+        return category.getCategoryId();
     }
 
     public static Rescrap createRescrap(RescrapDto dto, Scrap scrap, Users user, Category category) {
