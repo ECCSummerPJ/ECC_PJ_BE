@@ -20,11 +20,3 @@ spring:
 
 server:
   port: 8080
-
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
-  packages-to-scan: com.linkrap.BE.controller
-  paths-to-match: /api/**
