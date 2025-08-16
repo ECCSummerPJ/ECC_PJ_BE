@@ -23,11 +23,11 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private Users authorId;
+    private Users author;
 
     @ManyToOne
     @JoinColumn(name="scrap_id")
-    private Scrap scrapId;
+    private Scrap scrap;
 
     @Column
     private String content;
@@ -55,5 +55,9 @@ public class Comment {
                 dto.getCreatedAt(),
                 dto.getUpdatedAt()
         );
+    }
+
+    public Integer getScrapIdValue() {
+        return scrap.getScrapId();
     }
 }
