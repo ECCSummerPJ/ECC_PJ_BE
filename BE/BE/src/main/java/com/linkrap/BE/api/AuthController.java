@@ -7,14 +7,14 @@ import com.linkrap.BE.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
 
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -24,11 +24,13 @@ public class AuthController {
     @GetMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse join(@Valid @RequestBody JoinForm form) {
+        AuthResponse res = authService.join(form);
         return authService.join(form);
     }
 
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest req) {
+        AuthResponse res = authService.login(req);
         return authService.login(req);
 
 
