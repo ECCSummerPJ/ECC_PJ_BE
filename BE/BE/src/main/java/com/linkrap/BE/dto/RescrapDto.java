@@ -1,5 +1,7 @@
 package com.linkrap.BE.dto;
 
+import com.linkrap.BE.entity.Rescrap;
+import com.linkrap.BE.entity.Scrap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +20,15 @@ public class RescrapDto {
     private Integer scrapId;
     private String redirectLink;
     private Timestamp createdAt;
+
+    public static RescrapDto createRescrapDto(Rescrap rescrap) {
+        return new RescrapDto(
+                rescrap.getRescrapId(),
+                rescrap.getUserIdValue(),
+                rescrap.getCategoryIdValue(),
+                rescrap.getScrapIdValue(),
+                rescrap.getRedirectLink(),
+                rescrap.getCreatedAt()
+        );
+    }
 }

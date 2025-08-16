@@ -32,8 +32,18 @@ dependencies {
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation(platform("software.amazon.awssdk:bom:2.25.28"))
+	implementation("software.amazon.awssdk:s3")
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs << "-parameters"
+}
+
+// jar 이름 고정
+bootJar { archiveFileName = "app.jar" }

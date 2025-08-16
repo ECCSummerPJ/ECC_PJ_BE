@@ -1,6 +1,5 @@
 package com.linkrap.BE.entity;
 
-import com.linkrap.BE.dto.ScrapChangeRequestDto;
 
 import com.linkrap.BE.dto.ScrapDto;
 import com.linkrap.BE.dto.ScrapFavoriteDto;
@@ -8,14 +7,17 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
-import java.util.Objects;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Builder
 public class Scrap {
@@ -26,11 +28,11 @@ public class Scrap {
 
     @ManyToOne //FK
     @JoinColumn(name="user_id")
-    private Users userId;
+    private Users user;
 
     @ManyToOne //FK
     @JoinColumn(name="category_id")
-    private Category categoryId;
+    private Category category;
 
     @Column(name="title")
     private String scrapTitle;
@@ -42,7 +44,7 @@ public class Scrap {
     private String scrapMemo;
 
     @Column(name="is_favorite")
-    private boolean favorite;
+    private boolean favorite; //초기값 false
 
     @Column(name="is_public")
     private boolean showPublic;
@@ -52,12 +54,12 @@ public class Scrap {
     private Timestamp createdAt;
 
     @Column(name="updated_at")
-    @UpdateTimestamp
+    @LastModifiedDate
     private Timestamp updatedAt;
 
 
 
-    public void patch(ScrapChangeRequestDto dto) {
+    public void patch(ScrapDto dto) {
         if(dto.getScrapTitle()!=null)
             this.scrapTitle=dto.getScrapTitle();
         if(dto.getScrapLink()!=null)
@@ -72,11 +74,11 @@ public class Scrap {
 
 
     public Integer getUserIdValue() {
-        return userId.getUserId();
+        return user.getUserId();
     }
 
     public Integer getCategoryIdValue(){
-        return categoryId.getCategoryId();
+        return category.getCategoryId();
     }
 
     public static Scrap createScrap(ScrapDto dto, Users user, Category category) {

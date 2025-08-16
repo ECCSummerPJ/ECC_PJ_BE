@@ -1,5 +1,6 @@
 package com.linkrap.BE.service;
 
+import com.linkrap.BE.dto.CommentCreateRequestDto;
 import com.linkrap.BE.dto.CommentDto;
 import com.linkrap.BE.dto.CommentUpdateRequestDto;
 import com.linkrap.BE.entity.Comment;
@@ -28,13 +29,21 @@ public class CommentService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public CommentDto create(Integer scrapId, CommentDto dto) {
+    public CommentDto create(Integer scrapId, Integer requestUserId, CommentDto dto) {
         //1. 게시글 조회 및 예외 발생
         Scrap scrap=scrapRepository.findById(scrapId)
                 .orElseThrow(()->new IllegalArgumentException("댓글 생성 실패! "+"대상 게시글이 없습니다."));
         //2. 댓글 엔티티 생성
-        Users user= usersRepository.findById(dto.getAuthorId())
+        Users user= usersRepository.findById(requestUserId)
                 .orElseThrow(()->new IllegalArgumentException("댓글 생성 실패! "+"대상 생성자가 없습니다."));
+
+        //댓글 작성 제한
+        if (dto.getContent() == null || dto.getContent().isBlank()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+        if (dto.getContent().length() > 300) {
+            throw new IllegalArgumentException("내용은 300자 이하여야 합니다.");
+        }
         Comment comment=Comment.createComment(dto,scrap,user);
         //3. 댓글 엔티티를 DB에 저장
         Comment created=commentRepository.save(comment);
@@ -54,6 +63,10 @@ public class CommentService {
     public CommentDto update(int commentId, int requestUserId, CommentUpdateRequestDto dto) {
         Comment c = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
+        if (!c.getAuthor().getUserId().equals(requestUserId)) {
+            throw new IllegalArgumentException("본인 댓글만 수정할 수 있습니다.");
+        }
+
         if (dto.getContent() == null || dto.getContent().isBlank()) {
             throw new IllegalArgumentException("내용을 입력하세요.");
         }
@@ -72,7 +85,7 @@ public class CommentService {
     public void delete(int commentId, int requestUserId) {
         Comment c = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-        if (!c.getAuthorId().getUserId().equals(requestUserId)) {
+        if (!c.getAuthor().getUserId().equals(requestUserId)) {
             throw new IllegalArgumentException("본인 댓글만 삭제할 수 있습니다.");
         }
         commentRepository.delete(c);

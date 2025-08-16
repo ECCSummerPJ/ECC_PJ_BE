@@ -23,5 +23,19 @@ public class ScrapDto {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
+    public static ScrapDto createScrapDto(Scrap scrap) {
+        return new ScrapDto(
+                scrap.getScrapId(),
+                scrap.getUserIdValue(),
+                scrap.getCategoryIdValue(),
+                scrap.getScrapTitle(),
+                scrap.getScrapLink(),
+                scrap.getScrapMemo(),
+                scrap.isFavorite(),
+                scrap.isShowPublic(),
+                scrap.getCreatedAt(),
+                scrap.getUpdatedAt()
+        );
+    }
 
 }
