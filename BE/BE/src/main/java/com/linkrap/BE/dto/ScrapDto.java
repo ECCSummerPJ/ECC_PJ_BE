@@ -20,6 +20,7 @@ public class ScrapDto {
     private String scrapMemo;
     private boolean favorite;
     private boolean showPublic;
+    private boolean read;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -33,9 +34,9 @@ public class ScrapDto {
                 scrap.getScrapMemo(),
                 scrap.isFavorite(),
                 scrap.isShowPublic(),
+                scrap.isRead(),
                 scrap.getCreatedAt(),
                 scrap.getUpdatedAt()
         );
     }
-
 }

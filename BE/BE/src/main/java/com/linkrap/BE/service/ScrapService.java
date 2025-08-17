@@ -243,4 +243,20 @@ public class ScrapService {
         }
         return filteredStream.map(ScrapListDto::createScrapListDto).collect(Collectors.toList());
     }
+
+    //스크랩 열람 여부 기록
+    public void markAsRead(Integer scrapId) {
+        Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 스크랩입니다."));
+        scrap.setRead(true);
+        scrapRepository.save(scrap);
+    }
+
+    //리마인드 알람 목록
+    public List<RemindDto> getUnreadScrapsByOldest(Integer userId, int i) {
+        List<Scrap> unreadScraps = scrapRepository.findTop5ByUser_UserIdAndReadFalseOrderByCreatedAtAsc(userId);
+        return unreadScraps.stream()
+                .map(RemindDto::createRemindDto)
+                .collect(Collectors.toList());
+
+    }
 }
