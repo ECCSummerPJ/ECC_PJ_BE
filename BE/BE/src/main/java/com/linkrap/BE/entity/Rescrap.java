@@ -61,7 +61,7 @@ public class Rescrap {
                 user,
                 category,
                 scrap,
-                dto.getRedirectLink(),
+                "/api/scraps/"+scrap.getScrapId(),
                 dto.getCreatedAt()
         );
     }

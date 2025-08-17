@@ -1,7 +1,7 @@
 package com.linkrap.BE.service;
 
-import com.linkrap.BE.dto.CommentCreateRequestDto;
 import com.linkrap.BE.dto.CommentDto;
+import com.linkrap.BE.dto.CommentShowDto;
 import com.linkrap.BE.dto.CommentUpdateRequestDto;
 import com.linkrap.BE.entity.Comment;
 import com.linkrap.BE.entity.Scrap;
@@ -29,7 +29,7 @@ public class CommentService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public CommentDto create(Integer scrapId, Integer requestUserId, CommentDto dto) {
+    public CommentShowDto create(Integer scrapId, Integer requestUserId, CommentDto dto) {
         //1. 게시글 조회 및 예외 발생
         Scrap scrap=scrapRepository.findById(scrapId)
                 .orElseThrow(()->new IllegalArgumentException("댓글 생성 실패! "+"대상 게시글이 없습니다."));
@@ -48,15 +48,15 @@ public class CommentService {
         //3. 댓글 엔티티를 DB에 저장
         Comment created=commentRepository.save(comment);
         //4. DTO로 변환해 반환
-        return CommentDto.createCommentDto(created);
+        return CommentShowDto.createCommentShowDto(created);
     }
 
     // 댓글 조회
     @Transactional(readOnly = true)
-    public CommentDto get(int commentId) {
+    public CommentShowDto get(int commentId) {
         Comment c = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-        return CommentDto.createCommentDto(c);
+        return CommentShowDto.createCommentShowDto(c);
     }
 
     // 댓글 수정
