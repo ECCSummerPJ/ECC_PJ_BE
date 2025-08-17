@@ -67,18 +67,11 @@ public class CategoryApiController {
                                                         @RequestParam(required=false) Boolean favorite,
                                                         @RequestParam(required=false) Boolean showPublic){
         Integer userId = 1; //임시 사용자
-        if(categoryId==0){
-            List<ScrapListDto> dtos = scrapService.index();
-            return (dtos!=null) ?
-                    ResponseEntity.status(HttpStatus.OK).body(dtos) :
-                    ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        else {
             List<ScrapListDto> dtos = scrapService.getScrapsByFilter(userId, categoryId, favorite, showPublic);
             return (dtos!=null) ?
                     ResponseEntity.status(HttpStatus.OK).body(dtos) :
                     ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+//        }
 
     }
 }

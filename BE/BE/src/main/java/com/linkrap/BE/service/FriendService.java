@@ -42,4 +42,8 @@ public class FriendService {
         return FriendResponseDto.createFriendResponseDto(target);
     }
 
+    //친구 관계 확인
+    public boolean checkFriendship(Integer userId, Integer friendUserId) {
+        return friendRepository.existsByUserIdAndFriendUserId(userId, friendUserId);
+    }
 }

@@ -3,10 +3,14 @@ package com.linkrap.BE.api;
 import com.linkrap.BE.dto.FriendRequestDto;
 import com.linkrap.BE.dto.FriendResponseDto;
 import com.linkrap.BE.dto.ResponseFormat;
+import com.linkrap.BE.dto.ScrapListDto;
+import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.FriendService;
+import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +22,15 @@ import java.util.List;
 public class FriendApiController {
     @Autowired
     FriendService friendService;
+    @Autowired
+    ScrapService scrapService;
 
     //친구 조회
     @Operation(summary = "친구 목록 조회", description = "로그인한 사용자가 추가한 친구 목록 반환")
     @GetMapping("/friends")
     public ResponseEntity<List<FriendResponseDto>> friends(){
-        Integer userId = 1; //임시 사용자
-        List<FriendResponseDto> dtos = friendService.friends(userId);
+        Integer currentUserId = 1; //임시 사용자
+        List<FriendResponseDto> dtos = friendService.friends(currentUserId);
         return (dtos!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(dtos) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -34,8 +40,8 @@ public class FriendApiController {
     @Operation(summary = "친구 등록", description = "입력 받은 ID의 사용자를, 로그인한 사용자의 친구로 추가")
     @PostMapping("/friends")
     public ResponseEntity<FriendResponseDto> create(@RequestBody FriendRequestDto dto){
-        Integer userId = 1; //임시 사용자
-        FriendResponseDto createdDto = friendService.create(userId, dto);
+        Integer currentUserId = 1; //임시 사용자
+        FriendResponseDto createdDto = friendService.create(currentUserId, dto);
         return (createdDto!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(createdDto) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -49,8 +55,22 @@ public class FriendApiController {
                 ResponseEntity.status(HttpStatus.OK).body(deletedDto) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-    //친구 스크랩 목록
-    //@GetMapping("/friend/{friendUserId}/scraps")
-
+    //친구 스크랩 목록 조회
+    @Operation(summary = "친구 스크랩 목록 조회", description = "로그인한 사용자가 친구로 추가한 사용자의 스크랩 목록을 카테고리별로 조회")
+    @GetMapping("/friend/{friendUserId}/scraps")
+    public ResponseEntity<List<ScrapListDto>> getFriendScraps(@PathVariable Integer friendUserId,
+                                                              @RequestParam(required = false) Boolean favorite) {
+        Integer currentUserId = 1; //임시 사용자
+        //친구 관계 확인
+        boolean isFriend = friendService.checkFriendship(currentUserId, friendUserId);
+        if (!isFriend) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        List<ScrapListDto> friendScraps = scrapService.getPublicScraps(friendUserId, favorite);
+        if (friendScraps == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(friendScraps);
+    }
 
 }

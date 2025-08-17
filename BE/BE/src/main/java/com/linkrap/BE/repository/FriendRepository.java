@@ -18,4 +18,10 @@ public interface FriendRepository extends JpaRepository<Friend, Integer> {
     //특정 친구 관계 조회
     @Query(value = "SELECT * FROM friend WHERE friendship_id=:friendshipId", nativeQuery = true)
     Friend findByFriendshipId(Integer friendshipId);
+    //친구 관계 확인
+    @Query(value = "SELECT CASE WHEN COUNT(f.user_id) > 0 THEN true ELSE false END " +
+            "FROM friend f " +
+            "INNER JOIN users u ON f.friend_user_id = u.user_id " +
+            "WHERE f.user_id = :userId AND u.user_id = :friendUserId", nativeQuery = true)
+    boolean existsByUserIdAndFriendUserId(Integer userId, Integer friendUserId);
 }
