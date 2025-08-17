@@ -6,6 +6,7 @@ import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.dto.AuthResponse;
 import com.linkrap.BE.dto.JoinForm;
 import com.linkrap.BE.dto.LoginRequest;
+import com.linkrap.BE.repository.FriendRepository;
 import com.linkrap.BE.repository.UsersRepository;
 import com.linkrap.BE.repository.RefreshTokenRepository;
 import com.linkrap.BE.repository.bulk.FriendBulkDao;
@@ -31,14 +32,13 @@ public class AuthService {
     private final FriendBulkDao friendBulkDao;
     private final ScrapBulkDao scrapBulkDao;
     private final RefreshTokenRepository refreshTokenRepository;
-
-
+    private final FriendRepository friendRepository;
 
     @Transactional
     public AuthResponse join(JoinForm form) {
 
-        final String loginId  = form.getLoginId().trim();
-        final String email    = form.getEmail().trim().toLowerCase(Locale.ROOT);
+        final String loginId = form.getLoginId().trim();
+        final String email = form.getEmail().trim().toLowerCase(Locale.ROOT);
         final String nickname = form.getNickname().trim();
 
 
@@ -61,7 +61,7 @@ public class AuthService {
         u.setProfileImage(form.getProfileImageUrl());
 
 
-        Users saved  = userRepository.save(u);
+        Users saved = userRepository.save(u);
 
         String accessToken = jwtTokenProvider.generateAccessToken(
                 saved.getUserId(),
@@ -71,7 +71,6 @@ public class AuthService {
         String refreshToken = jwtTokenProvider.generateRefreshToken(saved.getUserId());
         java.time.OffsetDateTime expiry = java.time.OffsetDateTime.now().plusDays(14);
         refreshTokenRepository.save(new RefreshToken(saved, refreshToken, expiry));
-
 
 
         return new AuthResponse(
@@ -84,13 +83,16 @@ public class AuthService {
         );
     }
 
-    public record LoginTokens(String accessToken, String refreshToken) {}
-    public record LoginResult(AuthResponse body, LoginTokens tokens) {}
+    public record LoginTokens(String accessToken, String refreshToken) {
+    }
+
+    public record LoginResult(AuthResponse body, LoginTokens tokens) {
+    }
 
     @Transactional
-    public  LoginResult login(LoginRequest req) {
+    public LoginResult login(LoginRequest req) {
         final String loginId = req.loginId().trim();
-        final String rawPw   = req.password();
+        final String rawPw = req.password();
 
 
         Users user = userRepository.findByLoginId(loginId)
@@ -129,43 +131,75 @@ public class AuthService {
     }
 
 
+//    @Transactional
+//    public void deleteUser(Integer userId, boolean hard, String rawPassword) {
+//        Users user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+//
+//        if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()
+//                || rawPassword == null || rawPassword.isBlank()
+//                || !passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+//        }
+//
+//        refreshTokenRepository.deleteAllByUserId(userId);
+//
+//
+//        if (hard) {
+//
+//            friendBulkDao.deleteAllByUserIdOrFriendId(userId);
+//            scrapBulkDao.deleteAllByUserId(userId);
+//            userRepository.delete(user);
+//        } else {
+//
+//            user.setDeletedAt(OffsetDateTime.now());
+//            user.setNickname("(deleted)");
+//            //user.setEmail(null);
+//            user.setProfileImage(null);
+//
+//            scrapBulkDao.makePrivateByUserId(userId);
+//
+//            try {
+//                friendBulkDao.softDetachAllForUser(userId);
+//            } catch (Exception ignore) {}
+//        }
+//    }
+//
+//    private String extractAccessToken(String authHeader) {
+//        if (authHeader == null) return null;
+//        if (authHeader.startsWith("Bearer ")) return authHeader.substring(7);
+//        return null;
+//    }
+//}
+
     @Transactional
     public void deleteUser(Integer userId, boolean hard, String rawPassword) {
         Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()
-                || rawPassword == null || rawPassword.isBlank()
-                || !passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (user.getPasswordHash() == null || rawPassword == null ||
+                !passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+            throw new org.springframework.security.authentication.BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
+        // 로그인 세션/리프레시 정리
         refreshTokenRepository.deleteAllByUserId(userId);
 
-
         if (hard) {
-
             friendBulkDao.deleteAllByUserIdOrFriendId(userId);
             scrapBulkDao.deleteAllByUserId(userId);
-            userRepository.delete(user);
+            userRepository.delete(user);                 // FK 남으면 DataIntegrityViolationException → 409로 변환됨
         } else {
-
+            String dummyEmail = "deleted+" + userId + "@example.invalid";
             user.setDeletedAt(OffsetDateTime.now());
             user.setNickname("(deleted)");
-            user.setEmail(null);
+            user.setEmail(dummyEmail);
             user.setProfileImage(null);
 
+
             scrapBulkDao.makePrivateByUserId(userId);
+            friendRepository.deleteAllByUserInvolved(userId);
 
-            try {
-                friendBulkDao.softDetachAllForUser(userId);
-            } catch (Exception ignore) {}
         }
-    }
-
-    private String extractAccessToken(String authHeader) {
-        if (authHeader == null) return null;
-        if (authHeader.startsWith("Bearer ")) return authHeader.substring(7);
-        return null;
     }
 }

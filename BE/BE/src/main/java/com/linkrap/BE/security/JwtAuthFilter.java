@@ -31,22 +31,32 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String header = req.getHeader("Authorization");
+        logger.debug(req.getMethod() + " " + req.getRequestURI() + " | Authorization=" + header);
+        if (!StringUtils.hasText(header)) {
+            logger.debug("JWT: Authorization header missing");
+        } else {
+            logger.debug("JWT: Authorization header = " + header);
+        }
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String access = header.substring(7);
             try {
                 Jws<Claims> jws = tokenProvider.parse(access);
                 Integer userId = jws.getBody().get("userId", Integer.class);
                 String loginId = jws.getBody().getSubject();
+                logger.debug("JWT parsed OK: sub=" + loginId + ", userId=" + userId);
 
-                //DB 상태 확인
+
                 Users u = usersRepository.findById(userId).orElse(null);
                 if (u != null && u.getDeletedAt() == null) {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(u, null, List.of());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                }else {
+                    logger.debug("JWT user not found or deleted");
+                    SecurityContextHolder.clearContext();
                 }
             } catch (Exception e) {
-                // 토큰이 유효하지 않으면 인증 컨텍스트 비움 (요청은 계속 진행 -> 401은 엔드포인트가 보호되어 있으면 발생)
+                logger.debug("JWT parse/validate failed: " + e.getClass().getSimpleName() + " - " + e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }

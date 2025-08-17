@@ -9,22 +9,25 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleBadRequest(IllegalArgumentException e) {
-        return Map.of("error", e.getMessage());
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<java.util.Map<String,String>> badBody(org.springframework.web.bind.MethodArgumentNotValidException e) {
+        var m = new java.util.HashMap<String,String>();
+        e.getBindingResult().getFieldErrors().forEach(er -> m.put(er.getField(), er.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(m); // 400
+    }
+
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<?> badCred(org.springframework.security.authentication.BadCredentialsException e) {
+        return ResponseEntity.badRequest().body(java.util.Map.of("error","비밀번호 불일치")); // 400
+    }
+
+    @ExceptionHandler(jakarta.persistence.EntityNotFoundException.class)
+    public ResponseEntity<?> notFound(jakarta.persistence.EntityNotFoundException e) {
+        return ResponseEntity.status(404).body(java.util.Map.of("error","사용자 없음")); // 404
     }
 
     @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleConflict(Exception e) {
-        return Map.of("error", "이미 사용 중인 아이디 또는 이메일입니다.");
-    }
-
-    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidation(org.springframework.web.bind.MethodArgumentNotValidException e) {
-        var field = e.getBindingResult().getFieldError();
-        return Map.of("error", field != null ? field.getDefaultMessage() : "요청 형식이 올바르지 않습니다.");
+    public ResponseEntity<?> fk(org.springframework.dao.DataIntegrityViolationException e) {
+        return ResponseEntity.status(409).body(java.util.Map.of("error","데이터 제약 위반")); // 409
     }
 }

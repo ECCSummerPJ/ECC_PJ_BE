@@ -33,4 +33,7 @@ public class Friend {
        return new Friend(userId, friendUser);
    }
 
+    @Column(nullable = false)
+    private boolean active = true;
+
 }
