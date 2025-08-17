@@ -3,6 +3,8 @@ package com.linkrap.BE.repository;
 import com.linkrap.BE.dto.CommentDto;
 import com.linkrap.BE.dto.CommentShowDto;
 import com.linkrap.BE.entity.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +33,14 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     """)
     List<CommentShowDto> findCommentsByScrapId(@Param("scrapId") Integer scrapId);
 
+    @Query("""
+        select new com.linkrap.BE.dto.CommentShowDto(
+            c.commentId, c.scrap.scrapId, c.author.userId, c.author.nickname,
+            c.content, c.createdAt, c.updatedAt
+        )
+        from Comment c
+        where c.scrap.scrapId = :scrapId
+        order by c.createdAt desc, c.commentId desc
+    """)
+    Page<CommentShowDto> findPageByScrapId(@Param("scrapId") Integer scrapId, Pageable pageable);
 }
