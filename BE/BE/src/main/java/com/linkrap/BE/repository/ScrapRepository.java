@@ -30,5 +30,14 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer>, JpaSpeci
     """)
     List<ScrapListDto> findByScrapTitleContaining(@Param("keyword") String keyword);
 
+    @Query("""
+        select new com.linkrap.BE.dto.ScrapListDto(
+            s.scrapId, s.scrapTitle, s.scrapLink, s.scrapMemo, s.favorite, s.showPublic
+        )
+        from Scrap s
+        where s.favorite=true
+    """)
+    List<ScrapListDto> findAllFavorite();
+
 }
 

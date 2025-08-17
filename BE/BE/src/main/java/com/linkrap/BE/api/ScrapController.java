@@ -4,6 +4,7 @@ import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
+@Tag(name = "스크랩 API")
 public class ScrapController {
 
     @Autowired
@@ -42,11 +44,23 @@ public class ScrapController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    //스크랩 즐겨찾기만 조회
+    @Operation(summary = "스크랩 즐겨찾기만 조회")
+    @GetMapping("/scraps/favorites")
+    public ResponseEntity<List<ScrapListDto>> showFavorite(){
+        List<ScrapListDto> favorites=scrapService.showFavorite();
+
+        return (favorites!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(favorites) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     //스크랩 상세보기
     @Operation(summary = "스크랩 상세보기")
     @GetMapping("/scraps/{scrapId}")
     public ResponseEntity<ScrapShowResponseDto> show(@PathVariable("scrapId") Integer scrapId){
         ScrapShowResponseDto showed= scrapService.show(scrapId);
+
 
         return (showed!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(showed) :
