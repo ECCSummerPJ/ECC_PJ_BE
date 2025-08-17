@@ -1,7 +1,6 @@
 package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
-import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.CommentService;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -138,5 +137,24 @@ public class ScrapController {
         return ResponseEntity.ok(p.getContent());
     }
 
+    //스크랩 열람 여부 기록
+    @Operation(summary = "스크랩 열람 여부 기록")
+    @PatchMapping("/scraps/{scrapId}/read")
+    public ResponseEntity<Void> markAsRead(@PathVariable Integer scrapId){
+        scrapService.markAsRead(scrapId);
+        return ResponseEntity.ok().build();
+    }
+
+    //리마인드 알람 목록
+    @Operation(summary = "리마인드 알람 목록")
+    @GetMapping("/scraps/reminders")
+    public ResponseEntity<List<RemindDto>> getReminderScraps(){
+        Integer userId = 1; //임시 사용자
+        List<RemindDto> reminderScraps = scrapService.getUnreadScrapsByOldest(userId, 5);
+        if (reminderScraps.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reminderScraps);
+    }
 
 }

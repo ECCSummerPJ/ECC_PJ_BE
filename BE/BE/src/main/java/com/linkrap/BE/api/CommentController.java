@@ -22,16 +22,16 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    //댓글 생성
-    @Operation(summary = "댓글 생성")
-    @PostMapping("/{scrapId}/comments")
-    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentDto dto){
-        //서비스에 위임
-        CommentShowDto createdDto=commentService.create(scrapId, userId, dto);
-        //결과 응답
-        return (createdDto!=null) ?
-                ResponseEntity.status(HttpStatus.OK).body(createdDto) :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+//    //댓글 생성
+//    @Operation(summary = "댓글 생성")
+//    @PostMapping("/{scrapId}/comments")
+//    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentCreateRequestDto dto){
+//        //서비스에 위임
+//        CommentShowDto createdDto=commentService.create(scrapId, userId, dto);
+//        //결과 응답
+//        return (createdDto!=null) ?
+//                ResponseEntity.status(HttpStatus.OK).body(createdDto) :
+//                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//    }
 
 }

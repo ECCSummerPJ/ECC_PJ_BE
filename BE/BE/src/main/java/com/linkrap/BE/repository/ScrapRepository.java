@@ -40,5 +40,8 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer>, JpaSpeci
         where s.favorite=true
     """)
     List<ScrapListDto> findAllFavorite();
+
+    //오래된 미열람 게시글 5개 반환
+    List<Scrap> findTop5ByUser_UserIdAndReadFalseOrderByCreatedAtAsc(Integer userId);
 }
 
