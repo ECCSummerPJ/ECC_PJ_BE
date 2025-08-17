@@ -59,14 +59,15 @@ public class FriendApiController {
     @Operation(summary = "친구 스크랩 목록 조회", description = "로그인한 사용자가 친구로 추가한 사용자의 스크랩 목록을 카테고리별로 조회")
     @GetMapping("/friend/{friendUserId}/scraps")
     public ResponseEntity<List<ScrapListDto>> getFriendScraps(@PathVariable Integer friendUserId,
-                                                              @RequestParam(required = false) Boolean favorite) {
+                                                              @RequestParam(required = false) Boolean favorite,
+                                                              @RequestParam(required = false) Integer categoryId) {
         Integer currentUserId = 1; //임시 사용자
         //친구 관계 확인
         boolean isFriend = friendService.checkFriendship(currentUserId, friendUserId);
         if (!isFriend) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        List<ScrapListDto> friendScraps = scrapService.getPublicScraps(friendUserId, favorite);
+        List<ScrapListDto> friendScraps = scrapService.getPublicScraps(friendUserId, favorite, categoryId);
         if (friendScraps == null){
             return ResponseEntity.notFound().build();
         }

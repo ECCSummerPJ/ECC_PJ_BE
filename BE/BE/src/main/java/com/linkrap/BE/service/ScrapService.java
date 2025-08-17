@@ -230,11 +230,16 @@ public class ScrapService {
     }
 
     //친구의 공개 게시글 열람
-    public List<ScrapListDto> getPublicScraps(Integer friendUserId, Boolean favorite) {
+    public List<ScrapListDto> getPublicScraps(Integer friendUserId, Boolean favorite, Integer categoryId) {
         List<Scrap> friendScraps = scrapRepository.findByUser_UserIdAndShowPublicIsTrue(friendUserId);
         Stream<Scrap> filteredStream = friendScraps.stream();
+        //즐겨찾기 필터
         if (Boolean.TRUE.equals(favorite)){
             filteredStream = filteredStream.filter(Scrap::isFavorite);
+        }
+        //카테고리 필터
+        if (categoryId != null){
+            filteredStream = filteredStream.filter(scrap -> scrap.getCategory() != null && (categoryId != null && categoryId.equals(scrap.getCategory().getCategoryId())));
         }
         return filteredStream.map(ScrapListDto::createScrapListDto).collect(Collectors.toList());
     }
