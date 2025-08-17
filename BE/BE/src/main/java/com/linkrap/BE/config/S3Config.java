@@ -1,4 +1,4 @@
-/*
+
 package com.linkrap.BE.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,4 +14,4 @@ public class S3Config {
                 .region(software.amazon.awssdk.regions.Region.of(region))
                 .build();
     }
-}*/
+}

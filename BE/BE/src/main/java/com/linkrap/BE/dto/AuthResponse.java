@@ -10,6 +10,9 @@ public record AuthResponse (
     String loginId,
     String email,
     String nickname,
-    String profileImageUrl
+    String profileImageUrl,
+    String accessToken
 ) { }
+
+
 

@@ -1,22 +1,40 @@
-spring:
-  datasource:
-    url: jdbc:h2:mem:eccteam1db;MODE=MySQL;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    defer-datasource-initialization: true
+#spring:
+#  datasource:
+#    url: jdbc:h2:mem:eccteam1db;MODE=MySQL;DB_CLOSE_DELAY=-1
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    defer-datasource-initialization: true
+#
+#  sql:
+#    init:
+#      mode: always
+#
+#server:
+#  port: 8080
 
-  sql:
-    init:
-      mode: always
+logging:
+  level:
+    org.springdoc: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
 
-server:
-  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings
+
+jwt:
+  secret: "mQ8!Zr9#Xy2@Lp4^aT7$wV0&nF5*Jh6?dC3=Kp1%oR8+qS7bU9eV4gM0zN2"
+  access-ms: 1800000
+  refresh-ms: 1209600000
+
+

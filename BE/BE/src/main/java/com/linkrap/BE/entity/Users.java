@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -48,5 +49,9 @@ public class Users {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private OffsetDateTime deletedAt;
 
+    public Integer getId() {
+        return userId;
+    }
 }
