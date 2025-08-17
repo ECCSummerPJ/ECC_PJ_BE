@@ -2,10 +2,13 @@ package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Scrap;
+import com.linkrap.BE.service.CommentService;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +18,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
+@Tag(name = "스크랩 API")
 public class ScrapController {
 
     @Autowired
     private ScrapService scrapService;
+
+    @Autowired private CommentService commentService;
 
     //스크랩 생성
     @Operation(summary = "스크랩 생성")
@@ -42,11 +48,23 @@ public class ScrapController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    //스크랩 즐겨찾기만 조회
+    @Operation(summary = "스크랩 즐겨찾기만 조회")
+    @GetMapping("/scraps/favorites")
+    public ResponseEntity<List<ScrapListDto>> showFavorite(){
+        List<ScrapListDto> favorites=scrapService.showFavorite();
+
+        return (favorites!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(favorites) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     //스크랩 상세보기
     @Operation(summary = "스크랩 상세보기")
     @GetMapping("/scraps/{scrapId}")
     public ResponseEntity<ScrapShowResponseDto> show(@PathVariable("scrapId") Integer scrapId){
         ScrapShowResponseDto showed= scrapService.show(scrapId);
+
 
         return (showed!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(showed) :
@@ -93,6 +111,31 @@ public class ScrapController {
         return (searched!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(searched) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    //댓글 생성
+    @Operation(summary = "댓글 생성")
+    @PostMapping("scraps/{scrapId}/comments")
+    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentCreateRequestDto dto){
+        //서비스에 위임
+        CommentShowDto createdDto=commentService.create(scrapId, userId, dto);
+        //결과 응답
+        return (createdDto!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(createdDto) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+
+    // 스크랩 댓글 조회
+    @Operation(summary = "스크랩의 댓글 목록 조회")
+    @GetMapping("/scraps/{scrapId}/comments")
+    public ResponseEntity<List<CommentShowDto>> listComments(
+            @PathVariable int scrapId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<CommentShowDto> p = commentService.listByScrap(scrapId, page, size);
+        return ResponseEntity.ok(p.getContent());
     }
 
 

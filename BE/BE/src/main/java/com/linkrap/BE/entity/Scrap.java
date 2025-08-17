@@ -1,6 +1,7 @@
 package com.linkrap.BE.entity;
 
 
+import com.linkrap.BE.dto.CategoryDto;
 import com.linkrap.BE.dto.ScrapDto;
 import com.linkrap.BE.dto.ScrapFavoriteDto;
 import jakarta.persistence.*;
@@ -59,13 +60,15 @@ public class Scrap {
 
 
 
-    public void patch(ScrapDto dto) {
+    public void patch(ScrapDto dto, Category category) {
         if(dto.getScrapTitle()!=null)
             this.scrapTitle=dto.getScrapTitle();
         if(dto.getScrapLink()!=null)
             this.scrapLink=dto.getScrapLink();
         if(dto.getScrapMemo()!=null)
             this.scrapMemo=dto.getScrapMemo();
+        if(dto.getCategoryId()!=null)
+            this.category=category;
     }
 
     public void patchFavorite(ScrapFavoriteDto dto){

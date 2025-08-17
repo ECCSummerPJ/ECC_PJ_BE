@@ -36,11 +36,11 @@ public class RescrapService {
         //1. 동일한 scrapId 가진 scrap 찾아옴
         Scrap scrap=scrapRepository.findById(scrapId)
                 .orElseThrow(()->new IllegalArgumentException("댓글 생성 실패! "+"대상 게시글이 없습니다."));
-        Users user= usersRepository.findById(dto.getUserId())
+        Users user= usersRepository.findById(userId)
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
         Category category=categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
-        if (!dto.getUserId().equals(userId)) {
+        if (!scrap.getUserIdValue().equals(userId)) {
             throw new IllegalArgumentException("본인 스크랩은 리스크랩하지 못합니다.");
         }
         //2. dto->엔티티 변환

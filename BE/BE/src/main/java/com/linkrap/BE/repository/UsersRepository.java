@@ -29,5 +29,5 @@ public interface UsersRepository extends CrudRepository<Users, Integer> {
 
     // 닉네임 중복 확인
    // boolean existsByNickname(String nickname);
-//>>>>>>> bbc6cdadad5b3dc8ab8d970fe583fb67aba7c4e0
+
 }

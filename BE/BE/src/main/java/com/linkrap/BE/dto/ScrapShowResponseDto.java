@@ -1,10 +1,12 @@
 package com.linkrap.BE.dto;
 
+import com.linkrap.BE.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,5 +22,5 @@ public class ScrapShowResponseDto {
     private boolean showPublic;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
+    private List<CommentShowDto> comments;
 }
