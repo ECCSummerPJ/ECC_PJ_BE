@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
 @Tag(name = "스크랩 API")
 public class ScrapController {
@@ -40,9 +39,10 @@ public class ScrapController {
     //스크랩 전체 조회
     @Operation(summary = "스크랩 전체 조회")
     @GetMapping("/scraps")
-    public ResponseEntity<List<ScrapListDto>> index(){
-        List<ScrapListDto> indexed=scrapService.index();
-
+    public ResponseEntity<List<ScrapListDto>> index(@RequestParam(required=false) Boolean favorite,
+                                                    @RequestParam(required=false) Boolean showPublic){
+        Integer userId=1; //임시 사용자
+        List<ScrapListDto> indexed=scrapService.getAllScrapsByFilter(userId, favorite, showPublic);
         return (indexed!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(indexed) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
