@@ -39,3 +39,7 @@ out/
 .idea/
 *.xml
 .idea/workspace.xml
+
+# 배포 산출물
+deploy-eb/app.jar
+*.jar

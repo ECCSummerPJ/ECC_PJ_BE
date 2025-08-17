@@ -31,5 +31,14 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer>, JpaSpeci
 
     //친구의 공개된 스크랩 게시글 조회
     List<Scrap> findByUser_UserIdAndShowPublicIsTrue(Integer friendUserId);
+
+    @Query("""
+        select new com.linkrap.BE.dto.ScrapListDto(
+            s.scrapId, s.scrapTitle, s.scrapLink, s.scrapMemo, s.favorite, s.showPublic
+        )
+        from Scrap s
+        where s.favorite=true
+    """)
+    List<ScrapListDto> findAllFavorite();
 }
 

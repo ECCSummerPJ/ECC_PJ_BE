@@ -4,6 +4,7 @@ import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.repository.ScrapViewRepository;
 import com.linkrap.BE.repository.UsersRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -11,24 +12,31 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-
-
+@Slf4j
 @Service
 public class ProfileService {
 
     @Autowired UsersRepository usersRepository;
-    @Autowired
-    ScrapViewRepository scrapViewRepository;
+    @Autowired ScrapViewRepository scrapViewRepository;
+    @Autowired S3Client s3Client;
 
-    @Value("${app.upload.dir}")
+
+    @Value("${APP_STORAGE:local}")         private String storage;     // s3 또는 local
+    @Value("${APP_S3_BUCKET:}")            private String bucket;
+    @Value("${APP_S3_REGION:us-east-1}")   private String s3Region;
+    @Value("${APP_UPLOAD_DIR:./uploads}")
     private String uploadDir;
-
     // 프로필 조회
     @Transactional(readOnly = true)
     public ProfileDto getProfile(int userId) {
@@ -103,35 +111,62 @@ public class ProfileService {
         return new ProfileUpdateResponseDto(hasUpdated, profileDto);
     }
 
-
     // 프로필 이미지 변경
     public ProfileImageUpdateResponseDto updateProfileImage(int userId, MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("이미지 파일이 비어 있습니다.");
-        }
+        if (file == null || file.isEmpty()) throw new IllegalArgumentException("이미지 파일이 비어 있습니다.");
+
+        log.info("ProfileImage storage={}, bucket={}, region={}", storage, bucket, s3Region);
+        log.info("ENV APP_STORAGE={}, APP_S3_BUCKET={}, APP_S3_REGION={}",
+                System.getenv("APP_STORAGE"), System.getenv("APP_S3_BUCKET"), System.getenv("APP_S3_REGION"));
 
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. id=" + userId));
 
         try {
-            // 루트 디렉터리를 절대경로로 고정
-            Path root = Paths.get(uploadDir).toAbsolutePath().normalize();
-            Path dir  = root.resolve("profile-images");
-            Files.createDirectories(dir); // 폴더 없으면 생성
-
             String original = file.getOriginalFilename();
-            String ext = (original != null && original.contains(".")) ?
-                    original.substring(original.lastIndexOf(".")) : "";
+            String ext = (original != null && original.contains(".")) ? original.substring(original.lastIndexOf(".")) : "";
             String saved = java.util.UUID.randomUUID() + ext;
 
-            Path dest = dir.resolve(saved).toAbsolutePath().normalize(); // 절대경로
-            file.transferTo(dest.toFile());
+            String url;
+            if ("s3".equalsIgnoreCase(storage)) {
+                // --- S3 업로드 (ACL 제거) ---
+                String key = "profile-images/" + saved;
 
-            String url = "/uploads/profile-images/" + saved; // WebMvcConfig로 서빙됨
+                PutObjectRequest put = PutObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(key)
+                        .contentType(file.getContentType())
+                        .cacheControl("public, max-age=31536000")
+                        .build();
+
+                try {
+                    s3Client.putObject(put, RequestBody.fromBytes(file.getBytes()));
+                } catch (S3Exception e) {
+                    // 에러코드/메시지를 상세히 기록
+                    log.error("S3 putObject failed: code={}, message={}",
+                            e.awsErrorDetails().errorCode(), e.awsErrorDetails().errorMessage(), e);
+                    throw e;
+                }
+
+                // 리전 포함 URL (권장)
+                url = "https://" + bucket + ".s3." + s3Region + ".amazonaws.com/" + key;
+
+            } else {
+                // --- 기존 로컬 저장 ---
+                Path root = Paths.get(uploadDir).toAbsolutePath().normalize();
+                Path dir  = root.resolve("profile-images");
+                Files.createDirectories(dir);
+
+                Path dest = dir.resolve(saved).toAbsolutePath().normalize();
+                file.transferTo(dest.toFile());
+
+                url = "/uploads/profile-images/" + saved; // WebMvcConfig 서빙
+            }
+
             user.setProfileImage(url);
             usersRepository.save(user);
-
             return new ProfileImageUpdateResponseDto(true, url);
+
         } catch (Exception e) {
             throw new IllegalStateException("프로필 이미지 저장에 실패했습니다.", e);
         }
