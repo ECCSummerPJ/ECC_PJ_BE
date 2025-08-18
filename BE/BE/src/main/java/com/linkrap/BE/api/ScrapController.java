@@ -1,7 +1,6 @@
 package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
-import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.CommentService;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
 @Tag(name = "스크랩 API")
 public class ScrapController {
@@ -40,9 +38,10 @@ public class ScrapController {
     //스크랩 전체 조회
     @Operation(summary = "스크랩 전체 조회")
     @GetMapping("/scraps")
-    public ResponseEntity<List<ScrapListDto>> index(){
-        List<ScrapListDto> indexed=scrapService.index();
-
+    public ResponseEntity<List<ScrapListDto>> index(@RequestParam(required=false) Boolean favorite,
+                                                    @RequestParam(required=false) Boolean showPublic){
+        Integer userId=1; //임시 사용자
+        List<ScrapListDto> indexed=scrapService.getAllScrapsByFilter(userId, favorite, showPublic);
         return (indexed!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(indexed) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -138,5 +137,24 @@ public class ScrapController {
         return ResponseEntity.ok(p.getContent());
     }
 
+    //스크랩 열람 여부 기록
+    @Operation(summary = "스크랩 열람 여부 기록")
+    @PatchMapping("/scraps/{scrapId}/read")
+    public ResponseEntity<Void> markAsRead(@PathVariable Integer scrapId){
+        scrapService.markAsRead(scrapId);
+        return ResponseEntity.ok().build();
+    }
+
+    //리마인드 알람 목록
+    @Operation(summary = "리마인드 알람 목록")
+    @GetMapping("/scraps/reminders")
+    public ResponseEntity<List<RemindDto>> getReminderScraps(){
+        Integer userId = 1; //임시 사용자
+        List<RemindDto> reminderScraps = scrapService.getUnreadScrapsByOldest(userId, 5);
+        if (reminderScraps.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reminderScraps);
+    }
 
 }
