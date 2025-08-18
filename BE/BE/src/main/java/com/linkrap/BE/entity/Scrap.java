@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-@Builder
+@Setter
 public class Scrap {
     @Id //PK
     @GeneratedValue(strategy= GenerationType.IDENTITY) //숫자 자동으로 매겨짐
@@ -49,6 +49,9 @@ public class Scrap {
 
     @Column(name="is_public")
     private boolean showPublic;
+
+    @Column(name="is_read")
+    private boolean read; //초기값 false
 
     @Column(name="created_at")
     @CreationTimestamp
@@ -90,7 +93,7 @@ public class Scrap {
             throw new IllegalArgumentException("스크랩 생성 실패! 스크랩의 id가 없어야 합니다.");
         //엔티티 생성 및 반환
         return new Scrap(
-                dto.getScrapId(),
+                null,
                 user,
                 category,
                 dto.getScrapTitle(),
@@ -98,8 +101,9 @@ public class Scrap {
                 dto.getScrapMemo(),
                 dto.isFavorite(),
                 dto.isShowPublic(),
-                dto.getCreatedAt(),
-                dto.getUpdatedAt()
+                false,
+                null,
+                null
         );
     }
 

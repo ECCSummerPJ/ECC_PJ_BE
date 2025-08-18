@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api") //localhost:8080/api 이하 요청 처리하는 컨트롤러
 @Slf4j
 @Tag(name = "리스크랩 API")
 public class RescrapController {

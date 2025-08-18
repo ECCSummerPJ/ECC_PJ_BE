@@ -23,11 +23,19 @@ public interface FriendRepository extends JpaRepository<Friend, Integer> {
     Friend findByFriendshipId(Integer friendshipId);
 
 
+
     //탈퇴 응답이 500->아래 코드 추가함으로써
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query("delete from Friend f where f.userId = :uid or f.friendUser.userId = :uid")
     int deleteAllByUserInvolved(@Param("uid") Integer uid);
 
+
+
+    @Query(value = "SELECT CASE WHEN COUNT(f.user_id) > 0 THEN true ELSE false END " +
+            "FROM friend f " +
+            "INNER JOIN users u ON f.friend_user_id = u.user_id " +
+            "WHERE f.user_id = :userId AND u.user_id = :friendUserId", nativeQuery = true)
+    boolean existsByUserIdAndFriendUserId(Integer userId, Integer friendUserId);
 
 }
