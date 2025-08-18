@@ -1,5 +1,6 @@
 package com.linkrap.BE.service;
 
+import com.linkrap.BE.dto.RescrapCreateRequestDto;
 import com.linkrap.BE.dto.RescrapCreateResponseDto;
 import com.linkrap.BE.dto.RescrapDto;
 import com.linkrap.BE.dto.RescrapShowResponseDto;
@@ -31,7 +32,7 @@ public class RescrapService {
     @Autowired
     private final UsersRepository usersRepository;
 
-    public RescrapCreateResponseDto create(Integer scrapId, Integer userId, RescrapDto dto) {
+    public RescrapCreateResponseDto create(Integer scrapId, Integer userId, RescrapCreateRequestDto dto) {
 
         //1. 동일한 scrapId 가진 scrap 찾아옴
         Scrap scrap=scrapRepository.findById(scrapId)

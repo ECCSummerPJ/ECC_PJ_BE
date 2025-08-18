@@ -2,7 +2,6 @@ package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.CommentDto;
 import com.linkrap.BE.dto.CommentUpdateRequestDto;
-import com.linkrap.BE.dto.ResponseFormat;
 import com.linkrap.BE.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

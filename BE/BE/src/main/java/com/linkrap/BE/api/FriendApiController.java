@@ -2,7 +2,6 @@ package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.FriendRequestDto;
 import com.linkrap.BE.dto.FriendResponseDto;
-import com.linkrap.BE.dto.ResponseFormat;
 import com.linkrap.BE.dto.ScrapListDto;
 import com.linkrap.BE.entity.Scrap;
 import com.linkrap.BE.service.FriendService;

@@ -1,5 +1,6 @@
 package com.linkrap.BE.entity;
 
+import com.linkrap.BE.dto.RescrapCreateRequestDto;
 import com.linkrap.BE.dto.RescrapDto;
 import com.linkrap.BE.dto.ScrapDto;
 import jakarta.persistence.*;
@@ -51,18 +52,16 @@ public class Rescrap {
         return category.getCategoryId();
     }
 
-    public static Rescrap createRescrap(RescrapDto dto, Scrap scrap, Users user, Category category) {
-        //예외 발생
-        if (dto.getRescrapId() != null)
-            throw new IllegalArgumentException("스크랩 생성 실패! 리스크랩의 id가 없어야 합니다.");
+    public static Rescrap createRescrap(RescrapCreateRequestDto dto, Scrap scrap, Users user, Category category) {
+
         //엔티티 생성 및 반환
         return new Rescrap(
-                dto.getRescrapId(),
+                null,
                 user,
                 category,
                 scrap,
                 "/api/scraps/"+scrap.getScrapId(),
-                dto.getCreatedAt()
+                null
         );
     }
 }
