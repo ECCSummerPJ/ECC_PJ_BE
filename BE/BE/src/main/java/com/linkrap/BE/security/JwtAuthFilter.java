@@ -10,12 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 
+@Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
@@ -45,12 +48,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String loginId = jws.getBody().getSubject();
                 logger.debug("JWT parsed OK: sub=" + loginId + ", userId=" + userId);
 
-
-                Users u = usersRepository.findById(userId).orElse(null);
-                if (u != null && u.getDeletedAt() == null) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(u, null, List.of());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                Optional<Users> usersOptional = usersRepository.findById(userId);
+                if (usersOptional.isPresent()&&usersOptional.get().getDeletedAt() == null){
+                    Users u = usersOptional.get();
+                    CustomUserDetails userDetails = new CustomUserDetails(
+                            u.getUserId(),
+                            u.getLoginId(),
+                            u.getPasswordHash(),
+                            Collections.emptyList()
+                    );
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    logger.debug("Authentication set for user: "+loginId);
+//                Users u = usersRepository.findById(userId).orElse(null);
+//                if (u != null && u.getDeletedAt() == null) {
+//                    UsernamePasswordAuthenticationToken authentication =
+//                            new UsernamePasswordAuthenticationToken(u, null, List.of());
+//                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }else {
                     logger.debug("JWT user not found or deleted");
                     SecurityContextHolder.clearContext();

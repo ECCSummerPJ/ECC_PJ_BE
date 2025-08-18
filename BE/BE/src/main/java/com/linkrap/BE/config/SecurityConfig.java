@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,20 +27,20 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UsersRepository usersRepository;
+    private final JwtAuthFilter jwtAuthFilter;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter){
+        this.jwtAuthFilter = jwtAuthFilter;
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers(
-                        "/h2-console/**",
-                        "/api/**"
-                ))
-                .headers(h -> h.frameOptions(f -> f.sameOrigin()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -49,10 +50,10 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/h2-console/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/join").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/auth/me").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/join").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/auth/me").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -60,7 +61,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint((req, res, e) -> res.sendError(401, "Unauthorized"))
                 );
         http.addFilterBefore(
-                new JwtAuthFilter(jwtTokenProvider, usersRepository),
+                jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class
         );
 
