@@ -1,10 +1,22 @@
 package com.linkrap.BE.config;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+
+
+
+@SecurityScheme(
+        name = "Bearer Authentication",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 
 @Configuration    // 스프링 실행시 설정파일 읽어들이기 위한 어노테이션
 public class SwaggerConfig {
@@ -22,4 +34,5 @@ public class SwaggerConfig {
                 .description("CodeArena 유저 및 인증 , ps, 알림에 관한 REST API")
                 .version("1.0.0");
     }
+
 }
