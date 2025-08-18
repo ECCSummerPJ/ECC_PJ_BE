@@ -28,12 +28,8 @@ public class Friend {
        this.userId = userId;
        this.friendUser = friendUser;
    }
-
-   public static Friend createFriend(Integer userId, Users friendUser) {
-       return new Friend(userId, friendUser);
-   }
-
-    @Column(nullable = false)
-    private boolean active = true;
+    public static Friend createFriend(Integer userId, Users friendUser) {
+        return new Friend(userId, friendUser);
+    }
 
 }

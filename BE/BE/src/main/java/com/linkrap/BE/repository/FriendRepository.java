@@ -22,8 +22,12 @@ public interface FriendRepository extends JpaRepository<Friend, Integer> {
     @Query(value = "SELECT * FROM friend WHERE friendship_id=:friendshipId", nativeQuery = true)
     Friend findByFriendshipId(Integer friendshipId);
 
+
+    //탈퇴 응답이 500->아래 코드 추가함으로써
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query("delete from Friend f where f.userId = :uid or f.friendUser.userId = :uid")
     int deleteAllByUserInvolved(@Param("uid") Integer uid);
+
+
 }

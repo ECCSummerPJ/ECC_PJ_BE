@@ -1,4 +1,4 @@
-package com.linkrap.BE.repository.bulk;
+package com.linkrap.BE.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

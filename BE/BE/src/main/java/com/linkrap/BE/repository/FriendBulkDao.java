@@ -1,4 +1,4 @@
-package com.linkrap.BE.repository.bulk;
+package com.linkrap.BE.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -14,7 +14,6 @@ public class FriendBulkDao {
     @PersistenceContext
     private final EntityManager em;
 
-    /** 하드 삭제: A↔B 모두 제거 */
     @Modifying
     @Transactional
     public int deleteAllByUserIdOrFriendId(Integer userId) {
@@ -26,7 +25,7 @@ public class FriendBulkDao {
                 .executeUpdate();
     }
 
-    /** 소프트 삭제: active=false (Friend 엔티티에 active 필드가 있을 때) */
+
     @Modifying @Transactional
     public int softDetachAllForUser(Integer userId) {
         return em.createQuery("""

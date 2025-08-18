@@ -9,8 +9,8 @@ import com.linkrap.BE.dto.LoginRequest;
 import com.linkrap.BE.repository.FriendRepository;
 import com.linkrap.BE.repository.UsersRepository;
 import com.linkrap.BE.repository.RefreshTokenRepository;
-import com.linkrap.BE.repository.bulk.FriendBulkDao;
-import com.linkrap.BE.repository.bulk.ScrapBulkDao;
+import com.linkrap.BE.repository.FriendBulkDao;
+import com.linkrap.BE.repository.ScrapBulkDao;
 import com.linkrap.BE.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -131,46 +131,6 @@ public class AuthService {
     }
 
 
-//    @Transactional
-//    public void deleteUser(Integer userId, boolean hard, String rawPassword) {
-//        Users user = userRepository.findById(userId)
-//                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-//
-//        if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()
-//                || rawPassword == null || rawPassword.isBlank()
-//                || !passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//
-//        refreshTokenRepository.deleteAllByUserId(userId);
-//
-//
-//        if (hard) {
-//
-//            friendBulkDao.deleteAllByUserIdOrFriendId(userId);
-//            scrapBulkDao.deleteAllByUserId(userId);
-//            userRepository.delete(user);
-//        } else {
-//
-//            user.setDeletedAt(OffsetDateTime.now());
-//            user.setNickname("(deleted)");
-//            //user.setEmail(null);
-//            user.setProfileImage(null);
-//
-//            scrapBulkDao.makePrivateByUserId(userId);
-//
-//            try {
-//                friendBulkDao.softDetachAllForUser(userId);
-//            } catch (Exception ignore) {}
-//        }
-//    }
-//
-//    private String extractAccessToken(String authHeader) {
-//        if (authHeader == null) return null;
-//        if (authHeader.startsWith("Bearer ")) return authHeader.substring(7);
-//        return null;
-//    }
-//}
 
     @Transactional
     public void deleteUser(Integer userId, boolean hard, String rawPassword) {

@@ -8,22 +8,12 @@ import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 
 @RestController
@@ -55,8 +45,7 @@ public class AuthController {
     @Operation(summary = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<AuthResponse> join(@RequestBody JoinForm form) {
-        var res = authService.join(form); // accessToken 포함된 본문
-        // join()에서도 refresh 토큰을 만들었다면 쿠키로 내려줌 (아니면 생략)
+        var res = authService.join(form);
         ResponseCookie refresh = ResponseCookie.from("refresh_token", /* 발급한 refresh */ "")
                 .path("/")
                 .httpOnly(true)
@@ -86,19 +75,6 @@ public class AuthController {
     }
 
 
-//    @Operation(summary = "회원 탈퇴(비밀번호 확인 필수)")
-//    @DeleteMapping("/me")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deleteMe(@AuthenticationPrincipal Users user,
-//                         @RequestParam(defaultValue = "false") boolean hard,
-//                         @RequestBody(required = false) DeleteConfirm req) {
-//        authService.deleteUser(user.getId(), hard, req != null ? req.getPassword() : null);
-//    }
-//    @Data
-//    class DeleteConfirm {
-//        @NotBlank(message = "비밀번호를 입력해주세요.")
-//        private String password;
-//    }
 
     @Operation(summary = "회원 탈퇴(비밀번호 확인 필수)")
     @DeleteMapping("/me")

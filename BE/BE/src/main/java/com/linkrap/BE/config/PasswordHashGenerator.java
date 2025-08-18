@@ -1,4 +1,3 @@
-// src/main/java/com/linkrap/be/config/PasswordHashGenerator.java
 package com.linkrap.BE.config;
 
 import org.springframework.boot.CommandLineRunner;
