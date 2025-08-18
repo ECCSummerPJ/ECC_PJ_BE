@@ -72,8 +72,11 @@ public class Scrap {
             this.category=category;
     }
 
-    public void patchFavorite(ScrapFavoriteDto dto){
-        this.favorite=dto.isFavorite();
+    public void patchFavorite(Scrap scrap){
+        if(scrap.isFavorite())
+            this.favorite=false;
+        else this.favorite=true;
+
     }
 
     public Integer getUserIdValue() {

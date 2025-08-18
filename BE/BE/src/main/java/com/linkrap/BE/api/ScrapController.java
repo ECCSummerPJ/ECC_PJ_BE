@@ -81,10 +81,10 @@ public class ScrapController {
     }
 
     //즐겨찾기 토글
-    @Operation(summary = "스크랩 즐겨찾기 토글")
+    @Operation(summary = "스크랩 즐겨찾기 토글", description = "현재 상태가 true이면 false로, false면 true로 바뀜")
     @PatchMapping("/scraps/{scrapId}/favorite")
-    public ResponseEntity<ScrapFavoriteDto> favorite(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapFavoriteDto dto){
-        ScrapFavoriteDto favorited=scrapService.favorite(scrapId, dto);
+    public ResponseEntity<ScrapFavoriteDto> favorite(@PathVariable("scrapId") Integer scrapId){
+        ScrapFavoriteDto favorited=scrapService.favorite(scrapId);
         return (favorited!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(favorited) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -140,10 +140,10 @@ public class ScrapService {
         return ScrapDto.createScrapDto(target);
     }
 
-    public ScrapFavoriteDto favorite(Integer scrapId, ScrapFavoriteDto dto) {
+    public ScrapFavoriteDto favorite(Integer scrapId) {
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
-
-        target.patchFavorite(dto);
+        //ScrapFavoriteDto favoriteDto=ScrapFavoriteDto.createScrapFavoriteDto(target);
+        target.patchFavorite(target);
         Scrap favorite=scrapRepository.save(target);
         return new ScrapFavoriteDto(favorite.isFavorite());
     }
@@ -158,15 +158,6 @@ public class ScrapService {
             throw new IllegalArgumentException("검색어는 30자 이하여야 합니다.");
         }
 
-        //List<ScrapListDto> scrapDtoList=new ArrayList<>();
-        /*
-        if(scraps.isEmpty()) return scrapDtoList;
-
-        for(Scrap scrap : scraps){
-            scrapDtoList.add(this.entityToDto(scrap));
-        }
-
-         */
         //scrapDtoList.isEmpty() 이면 검색 결과 없음
         return scrapDtoList;
     }
