@@ -31,8 +31,8 @@ public class ScrapService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public ScrapCreateResponseDto create(ScrapDto dto){
-        Users user= usersRepository.findById(dto.getUserId())
+    public ScrapCreateResponseDto create(Integer userId, ScrapCreateRequestDto dto){
+        Users user= usersRepository.findById(userId)
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
         Category category=categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
@@ -64,7 +64,7 @@ public class ScrapService {
         return scrapRepository.findAllScrap();
     }
 
-    public List<ScrapListDto> showFavorite() { return scrapRepository.findAllFavorite(); }
+
 
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
@@ -90,7 +90,7 @@ public class ScrapService {
     }
 
     @Transactional
-    public ScrapChangeResponseDto update(Integer scrapId, Integer userId, ScrapDto dto){
+    public ScrapChangeResponseDto update(Integer scrapId, Integer userId, ScrapChangeRequestDto dto){
         //1. 스크랩 조회 및 예외 발생
         Scrap target=scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         //스크랩 작성 제한

@@ -27,15 +27,15 @@ public class ScrapController {
     //스크랩 생성
     @Operation(summary = "스크랩 생성")
     @PostMapping("/scraps")
-    public ResponseEntity<ScrapCreateResponseDto> create(@RequestBody ScrapDto dto){
-        ScrapCreateResponseDto created=scrapService.create(dto);
+    public ResponseEntity<ScrapCreateResponseDto> create(@RequestParam Integer userId, @RequestBody ScrapCreateRequestDto dto){
+        ScrapCreateResponseDto created=scrapService.create(userId, dto);
 
         return (created!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(created) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    //스크랩 전체 조회
+    //스크랩 전체 조회: 즐겨찾기만 보기/공개 스크랩만 보기 필터 포함
     @Operation(summary = "스크랩 전체 조회")
     @GetMapping("/scraps")
     public ResponseEntity<List<ScrapListDto>> index(@RequestParam(required=false) Boolean favorite,
@@ -44,17 +44,6 @@ public class ScrapController {
         List<ScrapListDto> indexed=scrapService.getAllScrapsByFilter(userId, favorite, showPublic);
         return (indexed!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(indexed) :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    //스크랩 즐겨찾기만 조회
-    @Operation(summary = "스크랩 즐겨찾기만 조회")
-    @GetMapping("/scraps/favorites")
-    public ResponseEntity<List<ScrapListDto>> showFavorite(){
-        List<ScrapListDto> favorites=scrapService.showFavorite();
-
-        return (favorites!=null) ?
-                ResponseEntity.status(HttpStatus.OK).body(favorites) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
@@ -71,9 +60,9 @@ public class ScrapController {
     }
 
     //스크랩 수정
-    @Operation(summary = "스크랩 수정")
+    @Operation(summary = "스크랩 수정", description = "카테고리 수정 시 'categoryId'~'showPublic' 모두 작성, 카테고리 수정하지 않을 시 'categoryId' 삭제하고 'scrapTitle'~'showPublic'만 작성")
     @PatchMapping("/scraps/{scrapId}")
-    public ResponseEntity<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody ScrapDto dto){
+    public ResponseEntity<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody ScrapChangeRequestDto dto){
         ScrapChangeResponseDto updated=scrapService.update(scrapId, userId, dto);
 
         return (updated!=null) ?
