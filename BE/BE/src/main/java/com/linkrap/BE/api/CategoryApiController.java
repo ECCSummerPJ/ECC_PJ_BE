@@ -9,6 +9,7 @@ import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CategoryApiController {
     //카테고리 생성
     @Operation(summary = "카테고리 생성", description = "카테고리 이름 설정 가능")
     @PostMapping("/categories")
-    public ResponseEntity<CategoryResponseDto> create(@RequestBody CategoryRequestDto dto,
+    public ResponseEntity<CategoryResponseDto> create(@RequestBody @Valid CategoryRequestDto dto,
                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer currentUserId = userDetails.getUserId();
         CategoryResponseDto createdDto = categoryService.create(currentUserId, dto);
@@ -49,7 +50,7 @@ public class CategoryApiController {
     //카테고리 이름 수정
     @Operation(summary = "카테고리 이름 수정", description = "경로변수로 받은 ID의 카테고리 이름 변경")
     @PatchMapping("/categories/{categoryId}")
-    public ResponseEntity<CategoryResponseDto> update(@PathVariable Integer categoryId, @RequestBody CategoryRequestDto dto,
+    public ResponseEntity<CategoryResponseDto> update(@PathVariable Integer categoryId, @RequestBody @Valid CategoryRequestDto dto,
                                                       @AuthenticationPrincipal CustomUserDetails userDetails){
         Integer currentUserId = userDetails.getUserId();
         CategoryResponseDto updatedDto = categoryService.update(categoryId, currentUserId, dto);
