@@ -8,6 +8,8 @@ import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.repository.CategoryRepository;
 import com.linkrap.BE.repository.ScrapRepository;
 import com.linkrap.BE.repository.UsersRepository;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,8 @@ public class CategoryService {
     public CategoryResponseDto create(Integer currentUserId, @RequestBody CategoryRequestDto dto) {
         //사용자 조회
         Users loggedInUser = userRepository.findById(currentUserId).orElseThrow(()->new IllegalArgumentException("등록되지 않은 사용자입니다."));
+        //글자수 공백 제한
+        String trimmedCategoryName = trimAndValidateCategoryName(dto.getCategoryName());
         //중복 확인
         if (categoryRepository.existsByUser_UserIdAndCategoryName(loggedInUser.getUserId(), dto.getCategoryName()))
             throw new IllegalArgumentException("동일한 이름의 카테고리가 존재합니다.");
@@ -37,6 +41,17 @@ public class CategoryService {
         Category created = categoryRepository.save(category);
         //DTO로 변환해 반환
         return CategoryResponseDto.createCategoryResponseDto(created);
+    }
+
+    private String trimAndValidateCategoryName(String categoryName) {
+        if (categoryName == null){
+            throw new IllegalArgumentException("카테고리 이름을 입력해주세요.");
+        }
+        String trimmed = categoryName.trim();
+        if (trimmed.isEmpty()){
+            throw new IllegalArgumentException("공백만으로 이루어진 이름은 사용할 수 없습니다.");
+        }
+        return trimmed;
     }
 
     //카테고리 목록 조회
@@ -54,6 +69,9 @@ public class CategoryService {
         if (!target.getUser().getUserId().equals(currentUserId)){
             throw new IllegalStateException("카테고리를 수정할 권한이 없습니다.");
         }
+        //중복 확인
+        if (categoryRepository.existsByUser_UserIdAndCategoryName(currentUserId, dto.getCategoryName()))
+            throw new IllegalArgumentException("동일한 이름의 카테고리가 존재합니다.");
         target.patch(dto);
         Category updated = categoryRepository.save(target);
         return CategoryResponseDto.createCategoryResponseDto(updated);
