@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+
 @Slf4j
 @Service
 public class ProfileService {
@@ -31,6 +33,7 @@ public class ProfileService {
     @Autowired UsersRepository usersRepository;
     @Autowired ScrapViewRepository scrapViewRepository;
     @Autowired S3Client s3Client;
+    @Autowired PasswordEncoder passwordEncoder;
 
 
     @Value("${APP_STORAGE:local}")         private String storage;     // s3 또는 local
@@ -38,6 +41,7 @@ public class ProfileService {
     @Value("${APP_S3_REGION:us-east-1}")   private String s3Region;
     @Value("${APP_UPLOAD_DIR:./uploads}")
     private String uploadDir;
+
     // 프로필 조회
     @Transactional(readOnly = true)
     public ProfileDto getProfile(int userId) {
@@ -93,15 +97,23 @@ public class ProfileService {
             if (dto.getCurrentPassword() == null || dto.getNewPassword() == null) {
                 throw new IllegalArgumentException("비밀번호 변경 시 현재/새 비밀번호를 모두 입력하세요.");
             }
-            if (!user.getPasswordHash().equals(dto.getCurrentPassword())) {
+
+            String saved = user.getPasswordHash();
+            String current = dto.getCurrentPassword().trim(); // 앞뒤 공백 제거
+            String newPw   = dto.getNewPassword().trim();
+
+            // 저장된 비번이 bcrypt면 matches, 아니면(옛 데이터) 평문 비교
+            boolean matched = (saved != null && saved.startsWith("$2"))
+                    ? passwordEncoder.matches(current, saved)
+                    : current.equals(saved);
+
+            if (!matched) {
                 throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
             }
 
             // 비밀번호 작성 제한 체크
-            String newPw = dto.getNewPassword();
             validatePassword(newPw);
-
-            user.setPasswordHash(newPw); // 학습용: 실제 서비스에서는 반드시 해시!
+            user.setPasswordHash(passwordEncoder.encode(newPw));
             hasUpdated.put("password", true);
         }
 

@@ -1,15 +1,18 @@
 package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
+import com.linkrap.BE.security.CustomUserDetails;
 import com.linkrap.BE.service.CommentService;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @Tag(name = "스크랩 API")
+@SecurityRequirement(name="bearerAuth")
 public class ScrapController {
 
     @Autowired
@@ -104,7 +108,8 @@ public class ScrapController {
     //댓글 생성
     @Operation(summary = "댓글 생성")
     @PostMapping("scraps/{scrapId}/comments")
-    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentCreateRequestDto dto){
+    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CommentCreateRequestDto dto){
+        Integer userId = userDetails.getUserId();
         //서비스에 위임
         CommentShowDto createdDto=commentService.create(scrapId, userId, dto);
         //결과 응답
