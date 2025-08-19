@@ -2,21 +2,26 @@ package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.CategoryRequestDto;
 import com.linkrap.BE.dto.CategoryResponseDto;
-import com.linkrap.BE.dto.ResponseFormat;
 import com.linkrap.BE.dto.ScrapListDto;
+import com.linkrap.BE.entity.Users;
+import com.linkrap.BE.security.CustomUserDetails;
 import com.linkrap.BE.service.CategoryService;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @Tag(name = "카테고리 API")
+@SecurityRequirement(name="bearerAuth")
 public class CategoryApiController {
     @Autowired
     CategoryService categoryService;
@@ -25,8 +30,9 @@ public class CategoryApiController {
     //카테고리 생성
     @Operation(summary = "카테고리 생성", description = "카테고리 이름 설정 가능")
     @PostMapping("/categories")
-    public ResponseEntity<CategoryResponseDto> create(@RequestBody CategoryRequestDto dto) {
-        int userId = 1; //임시 사용자
+    public ResponseEntity<CategoryResponseDto> create(@RequestBody CategoryRequestDto dto,
+                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
         CategoryResponseDto createdDto = categoryService.create(userId, dto);
         return (createdDto!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(createdDto) :
@@ -35,8 +41,8 @@ public class CategoryApiController {
     //카테고리 조회
     @Operation(summary = "카테고리 목록 조회", description = "로그인한 사용자가 만든 카테고리 목록 반환")
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryResponseDto>> categories() {
-        Integer userId = 1; //임시 사용자
+    public ResponseEntity<List<CategoryResponseDto>> categories(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
         List<CategoryResponseDto> dtos = categoryService.categories(userId);
         return (dtos!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(dtos) :
@@ -65,8 +71,9 @@ public class CategoryApiController {
     @GetMapping("/categories/{categoryId}/scraps")
     public ResponseEntity<List<ScrapListDto>> getScraps(@PathVariable Integer categoryId,
                                                         @RequestParam(required=false) Boolean favorite,
-                                                        @RequestParam(required=false) Boolean showPublic){
-        Integer userId = 1; //임시 사용자
+                                                        @RequestParam(required=false) Boolean showPublic,
+                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer userId = userDetails.getUserId();
             List<ScrapListDto> dtos = scrapService.getScrapsByFilter(userId, categoryId, favorite, showPublic);
             return (dtos!=null) ?
                     ResponseEntity.status(HttpStatus.OK).body(dtos) :

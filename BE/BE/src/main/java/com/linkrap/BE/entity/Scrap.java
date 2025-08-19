@@ -1,9 +1,7 @@
 package com.linkrap.BE.entity;
 
 
-import com.linkrap.BE.dto.CategoryDto;
-import com.linkrap.BE.dto.ScrapDto;
-import com.linkrap.BE.dto.ScrapFavoriteDto;
+import com.linkrap.BE.dto.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -63,7 +61,7 @@ public class Scrap {
 
 
 
-    public void patch(ScrapDto dto, Category category) {
+    public void patch(ScrapChangeRequestDto dto, Category category) {
         if(dto.getScrapTitle()!=null)
             this.scrapTitle=dto.getScrapTitle();
         if(dto.getScrapLink()!=null)
@@ -74,10 +72,12 @@ public class Scrap {
             this.category=category;
     }
 
-    public void patchFavorite(ScrapFavoriteDto dto){
-        this.favorite=dto.isFavorite();
-    }
+    public void patchFavorite(Scrap scrap){
+        if(scrap.isFavorite())
+            this.favorite=false;
+        else this.favorite=true;
 
+    }
 
     public Integer getUserIdValue() {
         return user.getUserId();
@@ -87,10 +87,8 @@ public class Scrap {
         return category.getCategoryId();
     }
 
-    public static Scrap createScrap(ScrapDto dto, Users user, Category category) {
-        //예외 발생
-        if (dto.getScrapId() != null)
-            throw new IllegalArgumentException("스크랩 생성 실패! 스크랩의 id가 없어야 합니다.");
+    public static Scrap createScrap(ScrapCreateRequestDto dto, Users user, Category category) {
+
         //엔티티 생성 및 반환
         return new Scrap(
                 null,
@@ -99,7 +97,7 @@ public class Scrap {
                 dto.getScrapTitle(),
                 dto.getScrapLink(),
                 dto.getScrapMemo(),
-                dto.isFavorite(),
+                false,
                 dto.isShowPublic(),
                 false,
                 null,
