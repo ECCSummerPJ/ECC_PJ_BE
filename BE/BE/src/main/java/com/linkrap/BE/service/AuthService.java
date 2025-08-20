@@ -48,18 +48,17 @@ public class AuthService {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
-
-        if (!form.passwordsMatch()) {
-            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        if (userRepository.existsByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
         }
+
 
         Users u = new Users();
         u.setLoginId(loginId);
         u.setEmail(email);
         u.setNickname(nickname);
         u.setPasswordHash(passwordEncoder.encode(form.getPassword()));
-        u.setProfileImage(form.getProfileImageUrl());
-
+        u.setProfileImage(null);
 
         Users saved = userRepository.save(u);
 
