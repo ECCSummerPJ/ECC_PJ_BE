@@ -241,15 +241,19 @@ public class ScrapService {
     }
 
     //스크랩 열람 여부 기록
-    public void markAsRead(Integer scrapId) {
+    public void markAsRead(Integer currentUserId, Integer scrapId) {
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 스크랩입니다."));
+        //사용자 아이디 불일치
+        if (!scrap.getUser().getUserId().equals(currentUserId)){
+            throw new IllegalStateException("스크랩을 수정할 권한이 없습니다.");
+        }
         scrap.setRead(true);
         scrapRepository.save(scrap);
     }
 
     //리마인드 알람 목록
-    public List<RemindDto> getUnreadScrapsByOldest(Integer userId, int i) {
-        List<Scrap> unreadScraps = scrapRepository.findTop5ByUser_UserIdAndReadFalseOrderByCreatedAtAsc(userId);
+    public List<RemindDto> getUnreadScrapsByOldest(Integer currentUserId, int i) {
+        List<Scrap> unreadScraps = scrapRepository.findTop5ByUser_UserIdAndReadFalseOrderByCreatedAtAsc(currentUserId);
         return unreadScraps.stream()
                 .map(RemindDto::createRemindDto)
                 .collect(Collectors.toList());

@@ -140,17 +140,18 @@ public class ScrapController {
     //스크랩 열람 여부 기록
     @Operation(summary = "스크랩 열람 여부 기록")
     @PatchMapping("/scraps/{scrapId}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Integer scrapId){
-        scrapService.markAsRead(scrapId);
+    public ResponseEntity<Void> markAsRead(@PathVariable Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer currentUserId = userDetails.getUserId();
+        scrapService.markAsRead(currentUserId, scrapId);
         return ResponseEntity.ok().build();
     }
 
     //리마인드 알람 목록
     @Operation(summary = "리마인드 알람 목록")
     @GetMapping("/scraps/reminders")
-    public ResponseEntity<List<RemindDto>> getReminderScraps(){
-        Integer userId = 1; //임시 사용자
-        List<RemindDto> reminderScraps = scrapService.getUnreadScrapsByOldest(userId, 5);
+    public ResponseEntity<List<RemindDto>> getReminderScraps(@AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer currentUserId = userDetails.getUserId();
+        List<RemindDto> reminderScraps = scrapService.getUnreadScrapsByOldest(currentUserId, 5);
         if (reminderScraps.isEmpty()){
             return ResponseEntity.noContent().build();
         }
