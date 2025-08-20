@@ -14,7 +14,6 @@ import java.util.List;
 public class ScrapShowResponseDto {
     private Integer scrapId;
     private Integer userId;
-    private Integer categoryId;
     private String categoryName;
     private String scrapTitle;
     private String scrapLink;

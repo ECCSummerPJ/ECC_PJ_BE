@@ -87,7 +87,7 @@ public class ScrapService {
             );
         }
 
-        return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),categoryName,scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt(),comments);
+        return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),categoryName,scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt(),comments);
     }
 
     @Transactional
