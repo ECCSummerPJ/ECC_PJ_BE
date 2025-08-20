@@ -30,7 +30,7 @@ public class Scrap {
     private Users user;
 
     @ManyToOne //FK
-    @JoinColumn(name="category_id")
+    @JoinColumn(name="category_id", nullable = true)
     private Category category;
 
     @Column(name="title")
