@@ -3,6 +3,7 @@ package com.linkrap.BE.config;
 import com.linkrap.BE.repository.UsersRepository;
 import com.linkrap.BE.security.JwtTokenProvider;
 import com.linkrap.BE.security.JwtAuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,7 +32,8 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter){
+    @Autowired
+    SecurityConfig(JwtAuthFilter jwtAuthFilter){
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
