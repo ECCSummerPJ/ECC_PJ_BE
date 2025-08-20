@@ -69,6 +69,7 @@ public class ScrapService {
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         List<CommentShowDto> comments = commentRepository.findCommentsByScrapId(scrapId);
+        String categoryName=categoryRepository.findByCategoryId(scrap.getCategoryIdValue());
 
         //소유자 id 꺼내기
         Integer ownerId = null;
@@ -86,7 +87,7 @@ public class ScrapService {
             );
         }
 
-        return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt(),comments);
+        return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),categoryName,scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt(),comments);
     }
 
     @Transactional
