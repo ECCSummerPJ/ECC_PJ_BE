@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
-@Table(name = "scrap_view")
+@Table(name = "scrap_views")
 public class ScrapView {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
