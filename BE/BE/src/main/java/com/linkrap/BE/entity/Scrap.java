@@ -55,7 +55,7 @@ public class Scrap {
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @Column(name="updated_at")
+    @Column(name="updated_at", insertable = false)
     @LastModifiedDate
     private Timestamp updatedAt;
 
@@ -68,7 +68,7 @@ public class Scrap {
             this.scrapLink=dto.getScrapLink();
         if(dto.getScrapMemo()!=null)
             this.scrapMemo=dto.getScrapMemo();
-        if(dto.getCategoryId()!=null)
+        if(dto.getCategoryName()!=null)
             this.category=category;
     }
 

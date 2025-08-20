@@ -16,20 +16,25 @@ public class CommentShowDto {
     private Integer commentId;
     private Integer scrapId;
     private Integer authorId;
-    private String authorNickname;
-    private String content;
+    private String  authorNickname;
+    private String  content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Boolean isMine;  // ← Boolean 권장
 
-    public static CommentShowDto createCommentShowDto(Comment comment) {
+    public static CommentShowDto of(Comment c, Integer requestUserId) {
+        boolean mine = requestUserId != null
+                && c.getAuthor() != null
+                && requestUserId.equals(c.getAuthor().getUserId());
         return new CommentShowDto(
-                comment.getCommentId(),
-                comment.getScrap().getScrapId(),
-                comment.getAuthor().getUserId(),
-                comment.getAuthor().getNickname(),
-                comment.getContent(),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt()
+                c.getCommentId(),
+                c.getScrap().getScrapId(),
+                c.getAuthor().getUserId(),
+                c.getAuthor().getNickname(),
+                c.getContent(),
+                c.getCreatedAt(),
+                c.getUpdatedAt(),
+                mine
         );
     }
 }

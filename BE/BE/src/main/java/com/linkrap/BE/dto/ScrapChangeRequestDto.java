@@ -8,7 +8,7 @@ import lombok.*;
 @ToString //모든 필드를 출력할 수 있는 toString 메서드 자동 생성
 @Builder
 public class ScrapChangeRequestDto {
-    private Integer categoryId;
+    private String categoryName;
     private String scrapTitle;
     private String scrapLink;
     private String scrapMemo;

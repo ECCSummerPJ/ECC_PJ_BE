@@ -17,7 +17,8 @@ import java.time.OffsetDateTime;
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(name="uk_users_login_id", columnNames = "login_id"),
-                @UniqueConstraint(name="uk_users_email", columnNames = "email")
+                @UniqueConstraint(name="uk_users_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_users_nickname", columnNames = "nickname")
         })
 public class Users {
     @Id
@@ -28,7 +29,7 @@ public class Users {
     @Column(name = "login_id", nullable = false, unique = true, length = 20)
     private String loginId;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, unique = true,length = 15)
     private String nickname;
 
     @Column(nullable = false,unique = true, length = 100)

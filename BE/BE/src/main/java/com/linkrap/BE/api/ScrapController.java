@@ -1,15 +1,18 @@
 package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
+import com.linkrap.BE.security.CustomUserDetails;
 import com.linkrap.BE.service.CommentService;
 import com.linkrap.BE.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @Tag(name = "스크랩 API")
+@SecurityRequirement(name="bearerAuth")
 public class ScrapController {
 
     @Autowired
@@ -27,7 +31,8 @@ public class ScrapController {
     //스크랩 생성
     @Operation(summary = "스크랩 생성")
     @PostMapping("/scraps")
-    public ResponseEntity<ScrapCreateResponseDto> create(@RequestParam Integer userId, @RequestBody ScrapCreateRequestDto dto){
+    public ResponseEntity<ScrapCreateResponseDto> create(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ScrapCreateRequestDto dto){
+        Integer userId = userDetails.getUserId();
         ScrapCreateResponseDto created=scrapService.create(userId, dto);
 
         return (created!=null) ?
@@ -39,8 +44,9 @@ public class ScrapController {
     @Operation(summary = "스크랩 전체 조회")
     @GetMapping("/scraps")
     public ResponseEntity<List<ScrapListDto>> index(@RequestParam(required=false) Boolean favorite,
-                                                    @RequestParam(required=false) Boolean showPublic){
-        Integer userId=1; //임시 사용자
+                                                    @RequestParam(required=false) Boolean showPublic,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer userId = userDetails.getUserId();
         List<ScrapListDto> indexed=scrapService.getAllScrapsByFilter(userId, favorite, showPublic);
         return (indexed!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(indexed) :
@@ -62,7 +68,8 @@ public class ScrapController {
     //스크랩 수정
     @Operation(summary = "스크랩 수정", description = "카테고리 수정 시 'categoryId'~'showPublic' 모두 작성, 카테고리 수정하지 않을 시 'categoryId' 삭제하고 'scrapTitle'~'showPublic'만 작성")
     @PatchMapping("/scraps/{scrapId}")
-    public ResponseEntity<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody ScrapChangeRequestDto dto){
+    public ResponseEntity<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ScrapChangeRequestDto dto){
+        Integer userId = userDetails.getUserId();
         ScrapChangeResponseDto updated=scrapService.update(scrapId, userId, dto);
 
         return (updated!=null) ?
@@ -73,7 +80,8 @@ public class ScrapController {
     //스크랩 삭제
     @Operation(summary = "스크랩 삭제")
     @DeleteMapping("/scraps/{scrapId}")
-    public ResponseEntity<ScrapDto> delete(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId){
+    public ResponseEntity<ScrapDto> delete(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer userId = userDetails.getUserId();
         ScrapDto deleted=scrapService.delete(scrapId,userId);
         return (deleted!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(deleted) :
@@ -104,7 +112,8 @@ public class ScrapController {
     //댓글 생성
     @Operation(summary = "댓글 생성")
     @PostMapping("scraps/{scrapId}/comments")
-    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody CommentCreateRequestDto dto){
+    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CommentCreateRequestDto dto){
+        Integer userId = userDetails.getUserId();
         //서비스에 위임
         CommentShowDto createdDto=commentService.create(scrapId, userId, dto);
         //결과 응답
@@ -120,8 +129,10 @@ public class ScrapController {
     public ResponseEntity<List<CommentShowDto>> listComments(
             @PathVariable int scrapId,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "3") int size,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        int userId = userDetails.getUserId();
         Page<CommentShowDto> p = commentService.listByScrap(scrapId, page, size);
         return ResponseEntity.ok(p.getContent());
     }

@@ -32,9 +32,11 @@ public class ScrapService {
 
     @Transactional
     public ScrapCreateResponseDto create(Integer userId, ScrapCreateRequestDto dto){
+        String categoryName=dto.getCategoryName();
+        Integer categoryId=categoryRepository.findByCategoryName(categoryName);
         Users user= usersRepository.findById(userId)
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
-        Category category=categoryRepository.findById(dto.getCategoryId())
+        Category category=categoryRepository.findById(categoryId)
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
         //스크랩 작성 제한
         if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
@@ -69,6 +71,7 @@ public class ScrapService {
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         List<CommentShowDto> comments = commentRepository.findCommentsByScrapId(scrapId);
+        String categoryName=categoryRepository.findByCategoryId(scrap.getCategoryIdValue());
 
         //소유자 id 꺼내기
         Integer ownerId = null;
@@ -86,7 +89,7 @@ public class ScrapService {
             );
         }
 
-        return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),scrap.getCategoryIdValue(),scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt(),comments);
+        return new ScrapShowResponseDto(scrap.getScrapId(),scrap.getUserIdValue(),categoryName,scrap.getScrapTitle(),scrap.getScrapLink(),scrap.getScrapMemo(),scrap.isFavorite(),scrap.isShowPublic(),scrap.getCreatedAt(),scrap.getUpdatedAt(),comments);
     }
 
     @Transactional
@@ -113,8 +116,10 @@ public class ScrapService {
             throw new IllegalArgumentException("메모는 500자 이하여야 합니다.");
         }
         //2. 스크랩 수정
-        if(dto.getCategoryId()!=null) {
-            Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(() -> new NoSuchElementException("CATEGORY_NOT_FOUND: " + dto.getCategoryId()));
+        if(dto.getCategoryName()!=null) {
+            String categoryName=dto.getCategoryName();
+            Integer categoryId=categoryRepository.findByCategoryName(categoryName);
+            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException("CATEGORY_NOT_FOUND: " + categoryId));
             target.patch(dto, category);
         }
         else target.patch(dto,null);
