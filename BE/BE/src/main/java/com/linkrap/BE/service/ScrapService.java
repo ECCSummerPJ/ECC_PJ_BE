@@ -32,9 +32,11 @@ public class ScrapService {
 
     @Transactional
     public ScrapCreateResponseDto create(Integer userId, ScrapCreateRequestDto dto){
+        String categoryName=dto.getCategoryName();
+        Integer categoryId=categoryRepository.findByCategoryName(categoryName);
         Users user= usersRepository.findById(userId)
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
-        Category category=categoryRepository.findById(dto.getCategoryId())
+        Category category=categoryRepository.findById(categoryId)
                 .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
         //스크랩 작성 제한
         if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
@@ -114,8 +116,10 @@ public class ScrapService {
             throw new IllegalArgumentException("메모는 500자 이하여야 합니다.");
         }
         //2. 스크랩 수정
-        if(dto.getCategoryId()!=null) {
-            Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(() -> new NoSuchElementException("CATEGORY_NOT_FOUND: " + dto.getCategoryId()));
+        if(dto.getCategoryName()!=null) {
+            String categoryName=dto.getCategoryName();
+            Integer categoryId=categoryRepository.findByCategoryName(categoryName);
+            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException("CATEGORY_NOT_FOUND: " + categoryId));
             target.patch(dto, category);
         }
         else target.patch(dto,null);

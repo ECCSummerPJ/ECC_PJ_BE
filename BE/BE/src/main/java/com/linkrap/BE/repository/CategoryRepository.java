@@ -21,4 +21,11 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
         where c.categoryId=:categoryId
     """)
     String findByCategoryId(Integer categoryId);
+
+    @Query("""
+        select c.categoryId
+        from Category c
+        where c.categoryName=:categoryName
+    """)
+    Integer findByCategoryName(String categoryName);
 }
