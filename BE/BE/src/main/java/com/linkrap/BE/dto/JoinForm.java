@@ -22,19 +22,10 @@ public class JoinForm {
     private String password;
 
     @NotBlank
-    @Size(max = 20)
-    private String passwordConfirm;
-
-    @NotBlank
     @Size(min = 2, max = 15)
     private String nickname;
 
-    @Size(max=500)
-    private String profileImageUrl;
 
-    public boolean passwordsMatch() {
-        return password != null && password.equals(passwordConfirm);
-    }
 
     public String getLoginId() { return loginId; }
     public void setLoginId(String loginId) { this.loginId = loginId; }
@@ -45,14 +36,10 @@ public class JoinForm {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getPasswordConfirm() { return passwordConfirm; }
-    public void setPasswordConfirm(String passwordConfirm) { this.passwordConfirm = passwordConfirm; }
-
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
 
-    public String getProfileImageUrl() { return profileImageUrl; }
-    public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
+
 }
 
 
