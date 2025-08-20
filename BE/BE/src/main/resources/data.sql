@@ -1,12 +1,12 @@
 INSERT INTO users (login_id, email, password_hash, nickname, profile_image, created_at, updated_at)
-    VALUES (
-    'demo1',
-    'demo1@example.com',
-    'pw',
-    '데모유저1',
-    '/uploads/sample1.png',
-    CURRENT_TIMESTAMP(),
-    NULL
+VALUES(
+       'demo1',
+       'demo1@example.com',
+       '$2a$10$0.IiftfyBrm91/rrp3ku2.O3qzKiWcjzOcJ6K2bAsE1/HIQmp.qjO',
+       '데모유저1',
+       '/uploads/sample1.png',
+       CURRENT_TIMESTAMP,
+       CURRENT_TIMESTAMP
     );
 
 INSERT INTO users (login_id, email, password_hash, nickname, profile_image, created_at, updated_at)

@@ -129,7 +129,7 @@ public class ScrapController {
     public ResponseEntity<List<CommentShowDto>> listComments(
             @PathVariable int scrapId,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "5") int size
     ) {
         Page<CommentShowDto> p = commentService.listByScrap(scrapId, page, size);
         return ResponseEntity.ok(p.getContent());
