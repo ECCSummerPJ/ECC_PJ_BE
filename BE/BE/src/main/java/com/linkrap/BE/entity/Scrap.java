@@ -55,7 +55,7 @@ public class Scrap {
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @Column(name="updated_at")
+    @Column(name="updated_at", insertable = false)
     @LastModifiedDate
     private Timestamp updatedAt;
 

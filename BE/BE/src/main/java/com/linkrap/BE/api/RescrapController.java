@@ -2,6 +2,7 @@ package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
 import com.linkrap.BE.entity.Rescrap;
+import com.linkrap.BE.security.CustomUserDetails;
 import com.linkrap.BE.service.RescrapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +26,8 @@ public class RescrapController {
     //**자기 스크랩은 리스크랩 못하게 조건 추가해야 함**
     @Operation(summary = "리스크랩 생성")
     @PostMapping("/scraps/{scrapId}/rescraps")
-    public ResponseEntity<RescrapCreateResponseDto> create(@PathVariable("scrapId") Integer scrapId, @RequestParam Integer userId, @RequestBody RescrapCreateRequestDto dto){
+    public ResponseEntity<RescrapCreateResponseDto> create(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody RescrapCreateRequestDto dto){
+        Integer userId = userDetails.getUserId();
         RescrapCreateResponseDto created= rescrapService.create(scrapId, userId, dto);
 
         return (created!=null) ?
@@ -46,7 +49,8 @@ public class RescrapController {
     //리스크랩 삭제
     @Operation(summary = "리스크랩 삭제")
     @DeleteMapping("/rescraps/{rescrapId}")
-    public ResponseEntity<RescrapDto> delete(@PathVariable("rescrapId") Integer rescrapId, @RequestParam Integer userId){
+    public ResponseEntity<RescrapDto> delete(@PathVariable("rescrapId") Integer rescrapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer userId = userDetails.getUserId();
         RescrapDto deleted=rescrapService.delete(rescrapId, userId);
         return (deleted!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(deleted) :
