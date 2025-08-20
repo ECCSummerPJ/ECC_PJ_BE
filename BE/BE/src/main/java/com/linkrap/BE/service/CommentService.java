@@ -10,6 +10,7 @@ import com.linkrap.BE.entity.Users;
 import com.linkrap.BE.repository.CommentRepository;
 import com.linkrap.BE.repository.ScrapRepository;
 import com.linkrap.BE.repository.UsersRepository;
+import com.linkrap.BE.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,24 +63,35 @@ public class CommentService {
         //3. 댓글 엔티티를 DB에 저장
         Comment created=commentRepository.save(comment);
         //4. DTO로 변환해 반환
-        return CommentShowDto.createCommentShowDto(created);
+        return CommentShowDto.of(created, requestUserId);
     }
 
     // 댓글 조회
     @Transactional(readOnly = true)
-    public CommentShowDto get(int commentId) {
+    public CommentShowDto get(int commentId, Integer requestUserId) {
         Comment c = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-        return CommentShowDto.createCommentShowDto(c);
+        return CommentShowDto.of(c,requestUserId);
     }
 
     // 댓글 페이지 조회
     @Transactional(readOnly = true)
-    public Page<CommentShowDto> listByScrap(int scrapId, int page, int size) {
-        // 프론트는 1부터, 스프링 Pageable은 0부터라 1 → 0 보정
-        int zeroBased = Math.max(page - 1, 0);
-        Pageable pageable = PageRequest.of(zeroBased, size, Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by("commentId").descending()));
-        return commentRepository.findPageByScrapId(scrapId, pageable);
+    public Page<CommentShowDto> listByScrap(Integer scrapId, int page, int size) {
+        Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size,
+                Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by("commentId").descending()));
+        Integer currentUserId = getCurrentUserIdOrNull();
+
+        return commentRepository.findPageByScrapId(scrapId, currentUserId, pageable);
+    }
+
+    private Integer getCurrentUserIdOrNull() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) return null;
+        Object principal = auth.getPrincipal();
+        if (principal instanceof CustomUserDetails cud) return cud.getUserId();
+        // principal이 Users라면:
+        // if (principal instanceof Users u) return u.getUserId();
+        return null;
     }
 
     // 댓글 수정

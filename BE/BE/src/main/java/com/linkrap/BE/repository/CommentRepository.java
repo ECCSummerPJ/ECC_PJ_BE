@@ -24,23 +24,44 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     """)
     void deleteComment(@Param("scrapId") Integer scrapId);
 
-    @Query("""
-        select new com.linkrap.BE.dto.CommentShowDto(
-            c.commentId, c.scrap.scrapId, c.author.userId, c.author.nickname, c.content, c.createdAt, c.updatedAt
-        )
-        from Comment c
-        where c.scrap.scrapId=:scrapId
-    """)
-    List<CommentShowDto> findCommentsByScrapId(@Param("scrapId") Integer scrapId);
-
+    // 목록 (isMine 계산 포함)
     @Query("""
         select new com.linkrap.BE.dto.CommentShowDto(
             c.commentId, c.scrap.scrapId, c.author.userId, c.author.nickname,
-            c.content, c.createdAt, c.updatedAt
+            c.content, c.createdAt, c.updatedAt,
+            case when (:currentUserId is not null and c.author.userId = :currentUserId)
+                 then true else false end
         )
         from Comment c
         where c.scrap.scrapId = :scrapId
         order by c.createdAt desc, c.commentId desc
     """)
-    Page<CommentShowDto> findPageByScrapId(@Param("scrapId") Integer scrapId, Pageable pageable);
+    List<CommentShowDto> findCommentsByScrapId(@Param("scrapId") Integer scrapId,
+                                               @Param("currentUserId") Integer currentUserId);
+
+    // (선택) 기존 호출부 호환용 오버로드
+    default List<CommentShowDto> findCommentsByScrapId(Integer scrapId) {
+        return findCommentsByScrapId(scrapId, null);
+    }
+
+    // 페이지
+    @Query(value = """
+        select new com.linkrap.BE.dto.CommentShowDto(
+            c.commentId, c.scrap.scrapId, c.author.userId, c.author.nickname,
+            c.content, c.createdAt, c.updatedAt,
+            case when (:currentUserId is not null and c.author.userId = :currentUserId)
+                 then true else false end
+        )
+        from Comment c
+        where c.scrap.scrapId = :scrapId
+        order by c.createdAt desc, c.commentId desc
+        """,
+            countQuery = """
+        select count(c)
+        from Comment c
+        where c.scrap.scrapId = :scrapId
+        """)
+    Page<CommentShowDto> findPageByScrapId(@Param("scrapId") Integer scrapId,
+                                           @Param("currentUserId") Integer currentUserId,
+                                           Pageable pageable);
 }
