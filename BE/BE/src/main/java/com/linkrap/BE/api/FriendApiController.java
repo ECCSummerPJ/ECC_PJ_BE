@@ -53,8 +53,10 @@ public class FriendApiController {
     //친구 해제
     @Operation(summary = "친구 해제", description = "로그인한 사용자가 추가한 친구 관계를 삭제")
     @DeleteMapping("/friends/{friendshipId}")
-    public ResponseEntity<FriendResponseDto> delete(@PathVariable Integer friendshipId){
-        FriendResponseDto deletedDto = friendService.delete(friendshipId);
+    public ResponseEntity<FriendResponseDto> delete(@PathVariable Integer friendshipId,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer currentUserId = userDetails.getUserId();
+        FriendResponseDto deletedDto = friendService.delete(currentUserId, friendshipId);
         return (deletedDto!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(deletedDto) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
