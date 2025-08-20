@@ -2,7 +2,7 @@ INSERT INTO users (login_id, email, password_hash, nickname, profile_image, crea
 VALUES(
        'demo1',
        'demo1@example.com',
-       '$2a$10$0.IiftfyBrm91/rrp3ku2.O3qzKiWcjzOcJ6K2bAsE1/HIQmp.qjO',
+       '$2a$10$h0AYOIO8huE31ljzWvdzA.0RxjrvGLf3Fa208PsmCvKjoVNN7Ic8G',
        '데모유저1',
        '/uploads/sample1.png',
        CURRENT_TIMESTAMP,
@@ -13,7 +13,7 @@ INSERT INTO users (login_id, email, password_hash, nickname, profile_image, crea
     VALUES (
     'demo2',
     'demo2@example.com',
-    'pw',
+    '$2a$10$h0AYOIO8huE31ljzWvdzA.0RxjrvGLf3Fa208PsmCvKjoVNN7Ic8G',
     '데모유저2',
     '/uploads/sample2.jpg',
     CURRENT_TIMESTAMP(),
@@ -25,7 +25,7 @@ INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
     VALUES (
     'demo3',
     'demo3@example.com',
-    'pw',
+    '$2a$10$h0AYOIO8huE31ljzWvdzA.0RxjrvGLf3Fa208PsmCvKjoVNN7Ic8G',
     '데모유저3',
     '/uploads/sample3.jpg'
     );
@@ -34,7 +34,7 @@ INSERT INTO users (login_id, email, password_hash, nickname, profile_image)
     VALUES (
     'demo4',
     'demo4@example.com',
-    'pw',
+    '$2a$10$h0AYOIO8huE31ljzWvdzA.0RxjrvGLf3Fa208PsmCvKjoVNN7Ic8G',
     '데모유저4',
     '/uploads/sample4.jpg'
     );
