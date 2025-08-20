@@ -14,4 +14,18 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     List<Category> findByUser_UserId(Integer userId);
 
     boolean existsByUser_UserIdAndCategoryName(int userId, String categoryName);
+
+    @Query("""
+        select c.categoryName
+        from Category c
+        where c.categoryId=:categoryId
+    """)
+    String findByCategoryId(Integer categoryId);
+
+    @Query("""
+        select c.categoryId
+        from Category c
+        where c.categoryName=:categoryName
+    """)
+    Integer findByCategoryName(String categoryName);
 }
