@@ -71,7 +71,7 @@ public class ScrapService {
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         List<CommentShowDto> comments = commentRepository.findCommentsByScrapId(scrapId);
-        String categoryName=categoryRepository.findByCategoryId(scrap.getCategoryIdValue());
+        String categoryName=categoryRepository.findByCategoryId(scrap.getCategoryIdValue()).getCategoryName();
 
         //소유자 id 꺼내기
         Integer ownerId = null;

@@ -4,6 +4,7 @@ import com.linkrap.BE.dto.ScrapListDto;
 import com.linkrap.BE.entity.Scrap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -43,7 +44,9 @@ public interface ScrapRepository extends JpaRepository<Scrap, Integer>, JpaSpeci
 
     //오래된 미열람 게시글 5개 반환
     List<Scrap> findTop5ByUser_UserIdAndReadFalseOrderByCreatedAtAsc(Integer userId);
-    //해당 카테고리의 게시글 목록 반환
-    List<Scrap> findByCategory_categoryId(Integer categoryId);
+    //카테고리 해제
+    @Modifying
+    @Query("UPDATE Scrap s SET s.category = null WHERE s.category.categoryId = :categoryId")
+    void setCategoryToNull(Integer categoryId);
 }
 
