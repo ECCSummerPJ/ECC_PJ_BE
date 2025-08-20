@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class ScrapCreateRequestDto {
 
-    private Integer categoryId;
+    private String categoryName;
     private String scrapTitle;
     private String scrapLink;
     private String scrapMemo;
