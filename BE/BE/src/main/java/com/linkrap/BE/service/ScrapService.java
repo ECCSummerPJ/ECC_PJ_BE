@@ -32,12 +32,7 @@ public class ScrapService {
 
     @Transactional
     public ScrapCreateResponseDto create(Integer userId, ScrapCreateRequestDto dto){
-        String categoryName=dto.getCategoryName();
-        Integer categoryId=categoryRepository.findByCategoryName(categoryName);
-        Users user= usersRepository.findById(userId)
-                .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
-        Category category=categoryRepository.findById(categoryId)
-                .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
+
         //스크랩 작성 제한
         if (dto.getScrapTitle() == null || dto.getScrapTitle().isBlank()) {
             throw new IllegalArgumentException("내용을 입력하세요.");
@@ -55,7 +50,22 @@ public class ScrapService {
             throw new IllegalArgumentException("메모는 500자 이하여야 합니다.");
         }
         //2. 스크랩 생성
-        Scrap scrap=Scrap.createScrap(dto,user,category);
+        Scrap scrap=null;
+        if(dto.getCategoryName()!=null){
+            String categoryName=dto.getCategoryName();
+            Integer categoryId=categoryRepository.findByCategoryName(categoryName);
+            Category category=categoryRepository.findById(categoryId)
+                    .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 카테고리가 없습니다."));
+            Users user= usersRepository.findById(userId)
+                    .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
+            scrap=Scrap.createScrap(dto,user,category);
+        }
+        else{
+            Users user= usersRepository.findById(userId)
+                    .orElseThrow(()->new IllegalArgumentException("스크랩 생성 실패! "+"대상 생성자가 없습니다."));
+            scrap=Scrap.createScrap(dto,user);
+        }
+
         //3. 스크랩 엔티티를 DB에 저장
         Scrap saved=scrapRepository.save(scrap);
         //4. DTO로 변환 및 반환
@@ -71,7 +81,13 @@ public class ScrapService {
     public ScrapShowResponseDto show(Integer scrapId){
         Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(()->new NoSuchElementException("SCRAP_NOT_FOUND: "+scrapId));
         List<CommentShowDto> comments = commentRepository.findCommentsByScrapId(scrapId);
-        String categoryName=categoryRepository.findByCategoryId(scrap.getCategoryIdValue()).getCategoryName();
+        String categoryName=null;
+        if(scrap.getCategoryIdValue()!=null){
+            categoryName=categoryRepository.findByCategoryId(scrap.getCategoryIdValue()).getCategoryName();
+        }
+        else{
+            categoryName="카테고리 없음";
+        }
 
         //소유자 id 꺼내기
         Integer ownerId = null;

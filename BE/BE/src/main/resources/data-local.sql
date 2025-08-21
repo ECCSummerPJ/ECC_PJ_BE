@@ -52,6 +52,7 @@ INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public
 INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public, is_read, created_at) VALUES (1, 2, '우유', 'https://youtube.com/...', '사모예드는 눈으로 기른다', false, true, false, CURRENT_TIMESTAMP());
 INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public, is_read, created_at) VALUES (1, 1, '치즈', 'https://www.instagram.com/reel/DH4qKa4OCYk/?igsh=aGIxaW5za2xkYjdz', 'cute cat', false, true, false, CURRENT_TIMESTAMP());
 INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public, is_read, created_at) VALUES (2, 3, '어몽어스', 'https://youtube.com/...', '같이 할 사람이 없네...', true, true, false, CURRENT_TIMESTAMP());
+INSERT INTO scrap(user_id, category_id, title, url, memo, is_favorite, is_public, is_read, created_at) VALUES (2, null, '카테고리 없음', 'https://youtube.com/...', '뜌어어어', true, true, false, CURRENT_TIMESTAMP());
 
 INSERT INTO rescrap(user_id, category_id, scrap_id, redirect_link, created_at) VALUES (2, 1, 1, '/api/scraps/1', CURRENT_TIMESTAMP());
 INSERT INTO rescrap(user_id, category_id, scrap_id, redirect_link, created_at) VALUES (2, 1, 3, '/api/scraps/3', CURRENT_TIMESTAMP());
