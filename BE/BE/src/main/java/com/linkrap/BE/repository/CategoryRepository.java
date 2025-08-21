@@ -15,11 +15,11 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     boolean existsByUser_UserIdAndCategoryName(int userId, String categoryName);
 
-//    @Query("""
-//        select c.categoryName
-//        from Category c
-//        where c.categoryId=:categoryId
-//    """)
+    @Query("""
+        select c.categoryName
+        from Category c
+        where c.categoryId=:categoryId
+    """)
     Category findByCategoryId(Integer categoryId);
 
     @Query("""

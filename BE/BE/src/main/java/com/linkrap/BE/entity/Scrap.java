@@ -84,7 +84,7 @@ public class Scrap {
     }
 
     public Integer getCategoryIdValue(){
-        return category.getCategoryId();
+        return (category != null) ? category.getCategoryId() : null;
     }
 
     public static Scrap createScrap(ScrapCreateRequestDto dto, Users user, Category category) {
@@ -94,6 +94,24 @@ public class Scrap {
                 null,
                 user,
                 category,
+                dto.getScrapTitle(),
+                dto.getScrapLink(),
+                dto.getScrapMemo(),
+                false,
+                dto.isShowPublic(),
+                false,
+                null,
+                null
+        );
+    }
+
+    public static Scrap createScrap(ScrapCreateRequestDto dto, Users user) {
+
+        //엔티티 생성 및 반환
+        return new Scrap(
+                null,
+                user,
+                null,
                 dto.getScrapTitle(),
                 dto.getScrapLink(),
                 dto.getScrapMemo(),
