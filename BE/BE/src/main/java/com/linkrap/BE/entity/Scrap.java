@@ -70,6 +70,8 @@ public class Scrap {
             this.scrapMemo=dto.getScrapMemo();
         if(dto.getCategoryName()!=null)
             this.category=category;
+
+        this.showPublic=dto.isShowPublic();
     }
 
     public void patchFavorite(Scrap scrap){
