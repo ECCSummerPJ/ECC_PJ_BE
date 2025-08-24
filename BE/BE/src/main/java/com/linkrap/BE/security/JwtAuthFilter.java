@@ -62,7 +62,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String header = req.getHeader("Authorization");
-        logger.debug(req.getMethod() + " " + req.getRequestURI() + " | Authorization=" + header);
+        logger.debug(req.getMethod() + " " + req.getRequestURI() + " | Authorization="+req.getHeader("Authorization"));
         if (!StringUtils.hasText(header)) {
             logger.debug("JWT: Authorization header missing");
         } else {
