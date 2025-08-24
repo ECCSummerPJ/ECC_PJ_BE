@@ -11,15 +11,28 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private static final AntPathMatcher PATH = new AntPathMatcher();
+    private static final List<String> WHITELIST = List.of(
+            "/",
+            "/actuator/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger",
+            "/auth/**",
+            "/h2-console/**"
+    );
 
     private final JwtTokenProvider tokenProvider;
     private final UsersRepository usersRepository;
@@ -34,6 +47,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
+
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+            chain.doFilter(req, res);
+            return;
+        }
+
+        String uri = req.getRequestURI();
+        for (String p : WHITELIST) {
+            if (PATH.match(p, uri)) {
+                chain.doFilter(req, res);
+                return;
+            }
+        }
 
         String header = req.getHeader("Authorization");
         logger.debug(req.getMethod() + " " + req.getRequestURI() + " | Authorization=" + header);
