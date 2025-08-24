@@ -90,4 +90,8 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", cfg);
         return source;
     }
-}
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }}
