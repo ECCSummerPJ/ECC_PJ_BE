@@ -17,4 +17,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadDir + "/");
     }
+  
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(
+                        "http://localhost:8080",
+                        "http://localhost:5173",
+                        "https://linkrap.netlify.app")
+                .allowedMethods("*")
+                .allowedHeaders("*");
+    }
 }
