@@ -65,4 +65,5 @@ INSERT INTO comment(user_id, scrap_id, content, created_at, updated_at) VALUES (
 
 INSERT INTO friend(user_id, friend_user_id) VALUES (1, 2);
 INSERT INTO friend(user_id, friend_user_id) VALUES (1, 3);
+INSERT INTO friend(user_id, friend_user_id) VALUES (1, 4);
 INSERT INTO friend(user_id, friend_user_id) VALUES (2, 3);
