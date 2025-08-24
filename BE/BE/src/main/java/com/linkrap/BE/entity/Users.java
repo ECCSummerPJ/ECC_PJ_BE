@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -15,8 +16,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(name="uk_users_user_id", columnNames = "user_id"),
-                @UniqueConstraint(name="uk_users_email", columnNames = "email")
+                @UniqueConstraint(name="uk_users_login_id", columnNames = "login_id"),
+                @UniqueConstraint(name="uk_users_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_users_nickname", columnNames = "nickname")
         })
 public class Users {
     @Id
@@ -27,7 +29,7 @@ public class Users {
     @Column(name = "login_id", nullable = false, unique = true, length = 20)
     private String loginId;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, unique = true,length = 15)
     private String nickname;
 
     @Column(nullable = false,unique = true, length = 100)
@@ -36,9 +38,6 @@ public class Users {
     @Column(name="password_hash", nullable = false, length = 100)
     private String passwordHash;
 
-//@Lob
-    //@Column(name = "profile_image")
-    //private byte[] profileImage;
 
     @Column(name = "profile_image", length = 500)
     private String profileImage;
@@ -51,5 +50,9 @@ public class Users {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private OffsetDateTime deletedAt;
 
+    public Integer getId() {
+        return userId;
+    }
 }

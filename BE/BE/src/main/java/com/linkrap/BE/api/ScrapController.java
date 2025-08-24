@@ -1,89 +1,161 @@
 package com.linkrap.BE.api;
 
 import com.linkrap.BE.dto.*;
-import com.linkrap.BE.entity.Scrap;
+import com.linkrap.BE.security.CustomUserDetails;
+import com.linkrap.BE.service.CommentService;
 import com.linkrap.BE.service.ScrapService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api") //localhost:8080/api/scraps 이하 요청 처리하는 컨트롤러
 @Slf4j
+@Tag(name = "스크랩 API")
+@SecurityRequirement(name="bearerAuth")
 public class ScrapController {
 
     @Autowired
     private ScrapService scrapService;
 
+    @Autowired private CommentService commentService;
+
     //스크랩 생성
+    @Operation(summary = "스크랩 생성")
     @PostMapping("/scraps")
-    public ResponseFormat<ScrapCreateResponseDto> create(@RequestBody ScrapDto dto){
-        ScrapCreateResponseDto created=scrapService.create(dto);
+    public ResponseEntity<ScrapCreateResponseDto> create(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ScrapCreateRequestDto dto){
+        Integer userId = userDetails.getUserId();
+        ScrapCreateResponseDto created=scrapService.create(userId, dto);
 
         return (created!=null) ?
-                ResponseFormat.created("스크랩 생성 완료",created) :
-                ResponseFormat.failure("요청 형식이 올바르지 않습니다");
+                ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    //스크랩 전체 조회
+    //스크랩 전체 조회: 즐겨찾기만 보기/공개 스크랩만 보기 필터 포함
+    @Operation(summary = "스크랩 전체 조회")
     @GetMapping("/scraps")
-    public ResponseFormat<List<Scrap>> index(){
-        List<Scrap> indexed=scrapService.index();
-
+    public ResponseEntity<List<ScrapListDto>> index(@RequestParam(required=false) Boolean favorite,
+                                                    @RequestParam(required=false) Boolean showPublic,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer userId = userDetails.getUserId();
+        List<ScrapListDto> indexed=scrapService.getAllScrapsByFilter(userId, favorite, showPublic);
         return (indexed!=null) ?
-                ResponseFormat.ok("스크랩 조회 성공",indexed) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(indexed) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     //스크랩 상세보기
+    @Operation(summary = "스크랩 상세보기")
     @GetMapping("/scraps/{scrapId}")
-    public ResponseFormat<ScrapShowResponseDto> show(@PathVariable("scrapId") Integer scrapId){
+    public ResponseEntity<ScrapShowResponseDto> show(@PathVariable("scrapId") Integer scrapId){
         ScrapShowResponseDto showed= scrapService.show(scrapId);
 
+
         return (showed!=null) ?
-                ResponseFormat.ok("스크랩 조회 성공",showed) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(showed) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     //스크랩 수정
+    @Operation(summary = "스크랩 수정", description = "카테고리 수정 시 'categoryId'~'showPublic' 모두 작성, 카테고리 수정하지 않을 시 'categoryId' 삭제하고 'scrapTitle'~'showPublic'만 작성")
     @PatchMapping("/scraps/{scrapId}")
-    public ResponseFormat<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapChangeRequestDto dto){
-        ScrapChangeResponseDto updated=scrapService.update(scrapId, dto);
+    public ResponseEntity<ScrapChangeResponseDto> update(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ScrapChangeRequestDto dto){
+        Integer userId = userDetails.getUserId();
+        ScrapChangeResponseDto updated=scrapService.update(scrapId, userId, dto);
 
         return (updated!=null) ?
-                ResponseFormat.ok("스크랩 수정 성공",updated) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(updated) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     //스크랩 삭제
+    @Operation(summary = "스크랩 삭제")
     @DeleteMapping("/scraps/{scrapId}")
-    public ResponseFormat<Scrap> delete(@PathVariable("scrapId") Integer scrapId){
-        Scrap deleted=scrapService.delete(scrapId);
+    public ResponseEntity<ScrapDto> delete(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer userId = userDetails.getUserId();
+        ScrapDto deleted=scrapService.delete(scrapId,userId);
         return (deleted!=null) ?
-                ResponseFormat.ok("스크랩 삭제 성공",null) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(deleted) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     //즐겨찾기 토글
+    @Operation(summary = "스크랩 즐겨찾기 토글", description = "현재 상태가 true이면 false로, false면 true로 바뀜")
     @PatchMapping("/scraps/{scrapId}/favorite")
-    public ResponseFormat<ScrapFavoriteDto> favorite(@PathVariable("scrapId") Integer scrapId, @RequestBody ScrapFavoriteDto dto){
-        ScrapFavoriteDto favorited=scrapService.favorite(scrapId, dto);
+    public ResponseEntity<ScrapFavoriteDto> favorite(@PathVariable("scrapId") Integer scrapId){
+        ScrapFavoriteDto favorited=scrapService.favorite(scrapId);
         return (favorited!=null) ?
-                ResponseFormat.ok("스크랩 즐겨찾기 성공",favorited) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(favorited) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 
     //키워드 검색
-    @GetMapping("/scraps/search?query={keyword}")
-    public ResponseFormat<List<ScrapDto>> search(@PathVariable("keyword") String keyword){
-        List<ScrapDto> searched=scrapService.search(keyword);
+    @Operation(summary = "스크랩 키워드 검색")
+    @GetMapping("/scraps/search") //scraps/search?query={keyword}로 호출됨
+    public ResponseEntity<List<ScrapListDto>> search(@RequestParam("keyword") String keyword){
+        List<ScrapListDto> searched=scrapService.search(keyword);
         return (searched!=null) ?
-                ResponseFormat.ok("키워드 검색 성공",searched) :
-                ResponseFormat.notFound("스크랩을 찾을 수 없습니다.");
+                ResponseEntity.status(HttpStatus.OK).body(searched) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    //댓글 생성
+    @Operation(summary = "댓글 생성")
+    @PostMapping("scraps/{scrapId}/comments")
+    public ResponseEntity<CommentShowDto> create(@PathVariable("scrapId") Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CommentCreateRequestDto dto){
+        Integer userId = userDetails.getUserId();
+        //서비스에 위임
+        CommentShowDto createdDto=commentService.create(scrapId, userId, dto);
+        //결과 응답
+        return (createdDto!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(createdDto) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+
+    // 스크랩 댓글 조회
+    @Operation(summary = "스크랩의 댓글 목록 조회")
+    @GetMapping("/scraps/{scrapId}/comments")
+    public ResponseEntity<List<CommentShowDto>> listComments(
+            @PathVariable int scrapId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        int userId = userDetails.getUserId();
+        Page<CommentShowDto> p = commentService.listByScrap(scrapId, page, size);
+        return ResponseEntity.ok(p.getContent());
+    }
+
+    //스크랩 열람 여부 기록
+    @Operation(summary = "스크랩 열람 여부 기록")
+    @PatchMapping("/scraps/{scrapId}/read")
+    public ResponseEntity<Void> markAsRead(@PathVariable Integer scrapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer currentUserId = userDetails.getUserId();
+        scrapService.markAsRead(currentUserId, scrapId);
+        return ResponseEntity.ok().build();
+    }
+
+    //리마인드 알람 목록
+    @Operation(summary = "리마인드 알람 목록")
+    @GetMapping("/scraps/reminders")
+    public ResponseEntity<List<RemindDto>> getReminderScraps(@AuthenticationPrincipal CustomUserDetails userDetails){
+        Integer currentUserId = userDetails.getUserId();
+        List<RemindDto> reminderScraps = scrapService.getUnreadScrapsByOldest(currentUserId, 5);
+        if (reminderScraps.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reminderScraps);
+    }
 
 }

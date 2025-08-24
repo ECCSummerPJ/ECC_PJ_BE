@@ -20,8 +20,23 @@ public class ScrapDto {
     private String scrapMemo;
     private boolean favorite;
     private boolean showPublic;
+    private boolean read;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-
+    public static ScrapDto createScrapDto(Scrap scrap) {
+        return new ScrapDto(
+                scrap.getScrapId(),
+                scrap.getUserIdValue(),
+                scrap.getCategoryIdValue(),
+                scrap.getScrapTitle(),
+                scrap.getScrapLink(),
+                scrap.getScrapMemo(),
+                scrap.isFavorite(),
+                scrap.isShowPublic(),
+                scrap.isRead(),
+                scrap.getCreatedAt(),
+                scrap.getUpdatedAt()
+        );
+    }
 }

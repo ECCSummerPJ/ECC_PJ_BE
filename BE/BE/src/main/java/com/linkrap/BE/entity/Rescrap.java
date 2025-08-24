@@ -1,5 +1,6 @@
 package com.linkrap.BE.entity;
 
+import com.linkrap.BE.dto.RescrapCreateRequestDto;
 import com.linkrap.BE.dto.RescrapDto;
 import com.linkrap.BE.dto.ScrapDto;
 import jakarta.persistence.*;
@@ -22,15 +23,15 @@ public class Rescrap {
 
     @ManyToOne //FK
     @JoinColumn(name="user_id")
-    private Users userId;
+    private Users user;
 
     @ManyToOne //FK
     @JoinColumn(name="category_id")
-    private Category categoryId;
+    private Category category;
 
     @ManyToOne //FK
     @JoinColumn(name="scrap_id") //원본 스크랩
-    private Scrap scrapId;
+    private Scrap scrap;
 
     @Column(name="redirect_link") //리다이렉트되는 링크 (원래 스크랩으로 연결됨)
     private String redirectLink;
@@ -40,21 +41,27 @@ public class Rescrap {
     private Timestamp createdAt;
 
     public Integer getScrapIdValue() {
-        return scrapId.getScrapId();
+        return scrap.getScrapId();
     }
 
-    public static Rescrap createRescrap(RescrapDto dto, Scrap scrap, Users user, Category category) {
-        //예외 발생
-        if (dto.getRescrapId() != null)
-            throw new IllegalArgumentException("스크랩 생성 실패! 리스크랩의 id가 없어야 합니다.");
+    public Integer getUserIdValue() {
+        return user.getUserId();
+    }
+
+    public Integer getCategoryIdValue() {
+        return category.getCategoryId();
+    }
+
+    public static Rescrap createRescrap(RescrapCreateRequestDto dto, Scrap scrap, Users user, Category category) {
+
         //엔티티 생성 및 반환
         return new Rescrap(
-                dto.getRescrapId(),
+                null,
                 user,
                 category,
                 scrap,
-                dto.getRedirectLink(),
-                dto.getCreatedAt()
+                "/api/scraps/"+scrap.getScrapId(),
+                null
         );
     }
 }

@@ -12,14 +12,12 @@ import lombok.ToString;
 @AllArgsConstructor
 public class FriendResponseDto {
    private Integer friendshipId;
-   private Integer userId;
    private Integer friendUserId;
    private String friendNickname;
 
    public static FriendResponseDto createFriendResponseDto(Friend createdFriend) {
         return new FriendResponseDto(
                createdFriend.getFriendshipId(),
-               createdFriend.getUserId(),
                createdFriend.getFriendUser().getUserId(),
                createdFriend.getFriendUser().getNickname()
        );

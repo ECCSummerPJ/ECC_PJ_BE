@@ -1,23 +1,24 @@
 package com.linkrap.BE.entity;
 
-import com.linkrap.BE.dto.ScrapChangeRequestDto;
 
-import com.linkrap.BE.dto.ScrapDto;
-import com.linkrap.BE.dto.ScrapFavoriteDto;
+import com.linkrap.BE.dto.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
-import java.util.Objects;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
-@Builder
+@Setter
 public class Scrap {
     @Id //PK
     @GeneratedValue(strategy= GenerationType.IDENTITY) //숫자 자동으로 매겨짐
@@ -26,11 +27,11 @@ public class Scrap {
 
     @ManyToOne //FK
     @JoinColumn(name="user_id")
-    private Users userId;
+    private Users user;
 
     @ManyToOne //FK
-    @JoinColumn(name="category_id")
-    private Category categoryId;
+    @JoinColumn(name="category_id", nullable = true)
+    private Category category;
 
     @Column(name="title")
     private String scrapTitle;
@@ -42,60 +43,85 @@ public class Scrap {
     private String scrapMemo;
 
     @Column(name="is_favorite")
-    private boolean favorite;
+    private boolean favorite; //초기값 false
 
     @Column(name="is_public")
     private boolean showPublic;
+
+    @Column(name="is_read")
+    private boolean read; //초기값 false
 
     @Column(name="created_at")
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @Column(name="updated_at")
-    @UpdateTimestamp
+    @Column(name="updated_at", insertable = false)
+    @LastModifiedDate
     private Timestamp updatedAt;
 
 
 
-
-    public void patch(ScrapChangeRequestDto dto) {
+    public void patch(ScrapChangeRequestDto dto, Category category) {
         if(dto.getScrapTitle()!=null)
             this.scrapTitle=dto.getScrapTitle();
         if(dto.getScrapLink()!=null)
             this.scrapLink=dto.getScrapLink();
         if(dto.getScrapMemo()!=null)
             this.scrapMemo=dto.getScrapMemo();
+        if(dto.getCategoryName()!=null)
+            this.category=category;
+
+        this.showPublic=dto.isShowPublic();
     }
 
-    public void patchFavorite(ScrapFavoriteDto dto){
-        this.favorite=dto.isFavorite();
-    }
+    public void patchFavorite(Scrap scrap){
+        if(scrap.isFavorite())
+            this.favorite=false;
+        else this.favorite=true;
 
+    }
 
     public Integer getUserIdValue() {
-        return userId.getUserId();
+        return user.getUserId();
     }
 
     public Integer getCategoryIdValue(){
-        return categoryId.getCategoryId();
+        return (category != null) ? category.getCategoryId() : null;
     }
 
-    public static Scrap createScrap(ScrapDto dto, Users user, Category category) {
-        //예외 발생
-        if (dto.getScrapId() != null)
-            throw new IllegalArgumentException("스크랩 생성 실패! 스크랩의 id가 없어야 합니다.");
+    public static Scrap createScrap(ScrapCreateRequestDto dto, Users user, Category category) {
+
         //엔티티 생성 및 반환
         return new Scrap(
-                dto.getScrapId(),
+                null,
                 user,
                 category,
                 dto.getScrapTitle(),
                 dto.getScrapLink(),
                 dto.getScrapMemo(),
-                dto.isFavorite(),
+                false,
                 dto.isShowPublic(),
-                dto.getCreatedAt(),
-                dto.getUpdatedAt()
+                false,
+                null,
+                null
+        );
+    }
+
+    public static Scrap createScrap(ScrapCreateRequestDto dto, Users user) {
+
+        //엔티티 생성 및 반환
+        return new Scrap(
+                null,
+                user,
+                null,
+                dto.getScrapTitle(),
+                dto.getScrapLink(),
+                dto.getScrapMemo(),
+                false,
+                dto.isShowPublic(),
+                false,
+                null,
+                null
         );
     }
 

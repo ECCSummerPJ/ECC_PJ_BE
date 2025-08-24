@@ -20,26 +20,34 @@ public class FriendService {
     UsersRepository usersRepository;
 
     //친구 조회
-    public List<FriendResponseDto> friends(Integer userId){
-        return friendRepository.findByUserId(userId)
+    public List<FriendResponseDto> friends(Integer currentUserId){
+        return friendRepository.findByUserId(currentUserId)
                 .stream()
                 .map(FriendResponseDto::createFriendResponseDto)
                 .collect(Collectors.toList());
     }
 
     //친구 등록
-    public FriendResponseDto create(Integer userId, FriendRequestDto dto) {
+    public FriendResponseDto create(Integer currentUserId, FriendRequestDto dto) {
         Users friendUser = usersRepository.findById(dto.getFriendUserId()).orElseThrow(()->new IllegalArgumentException("등록된 사용자가 아닙니다."));
-        Friend friend = Friend.createFriend(userId, friendUser);
+        Friend friend = Friend.createFriend(currentUserId, friendUser);
         Friend createdFriend = friendRepository.save(friend);
         return FriendResponseDto.createFriendResponseDto(createdFriend);
     }
 
     //친구 해제
-    public FriendResponseDto delete(Integer friendshipId) {
+    public FriendResponseDto delete(Integer currentUserId, Integer friendshipId) {
         Friend target = friendRepository.findByFriendshipId(friendshipId);
+        //사용자 아이디 불일치
+        if (!target.getUserId().equals(currentUserId)){
+            throw new IllegalStateException("친구를 삭제할 권한이 없습니다.");
+        }
         friendRepository.delete(target);
         return FriendResponseDto.createFriendResponseDto(target);
     }
 
+    //친구 관계 확인
+    public boolean checkFriendship(Integer userId, Integer friendUserId) {
+        return friendRepository.existsByUserIdAndFriendUserId(userId, friendUserId);
+    }
 }

@@ -23,11 +23,12 @@ public class CommentDto {
     public static CommentDto createCommentDto(Comment comment) {
         return new CommentDto(
                 comment.getCommentId(),
-                comment.getScrapId().getScrapId(),
-                comment.getAuthorId().getUserId(),
+                comment.getScrap().getScrapId(),
+                comment.getAuthor().getUserId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
     }
+
 }

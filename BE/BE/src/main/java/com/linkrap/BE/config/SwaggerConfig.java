@@ -1,25 +1,41 @@
-package com.linkrap.BE.config;
-
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration    // 스프링 실행시 설정파일 읽어들이기 위한 어노테이션
-public class SwaggerConfig {
-
-    @Bean
-    public OpenAPI openAPI() {
-        return new OpenAPI()
-                .components(new Components())
-                .info(apiInfo());
-    }
-
-    private Info apiInfo() {
-        return new Info()
-                .title("CodeArena Swagger")
-                .description("CodeArena 유저 및 인증 , ps, 알림에 관한 REST API")
-                .version("1.0.0");
-    }
-}
+//package com.linkrap.BE.config;
+//
+//import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+//import io.swagger.v3.oas.annotations.security.SecurityScheme;
+//import io.swagger.v3.oas.models.Components;
+//import io.swagger.v3.oas.models.OpenAPI;
+//import io.swagger.v3.oas.models.info.Info;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//
+//
+//
+//
+//@SecurityScheme(
+//        name = "Bearer Authentication",
+//        type = SecuritySchemeType.HTTP,
+//        bearerFormat = "JWT",
+//        scheme = "bearer"
+//)
+//
+//@Configuration    // 스프링 실행시 설정파일 읽어들이기 위한 어노테이션
+//public class SwaggerConfig {
+//
+//    @Bean
+//    public OpenAPI customOpenAPI() {
+//        return new OpenAPI()
+//                .components(new Components()
+//                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+//                                .type(SecurityScheme.Type.HTTP)
+//                                .scheme("bearer")
+//                                .bearerFormat("JWT")));
+//    }
+//
+//    private Info apiInfo() {
+//        return new Info()
+//                .title("CodeArena Swagger")
+//                .description("CodeArena 유저 및 인증 , ps, 알림에 관한 REST API")
+//                .version("1.0.0");
+//    }
+//
+//}
