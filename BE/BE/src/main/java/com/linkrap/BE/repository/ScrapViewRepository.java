@@ -43,4 +43,13 @@ public interface ScrapViewRepository extends JpaRepository<ScrapView, Integer> {
     order by count(v.scrapViewId) desc, c.categoryId asc
 """)
     List<StatisticsCategoryItem> findTopCategoriesByOwner(@Param("userId") int userId, Pageable pageable);
+
+    @Modifying
+    //scrap 지워지면 해당 scrapView들도 지워지도록 하는 기능
+    @Query("""
+        delete
+        from ScrapView sv
+        where sv.scrap.scrapId=:scrapId
+    """)
+    void deleteScrapView(@Param("scrapId") Integer scrapId);
 }

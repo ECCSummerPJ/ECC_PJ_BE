@@ -29,6 +29,8 @@ public class ScrapService {
     private final ScrapViewRepository scrapViewRepository;
     @Autowired
     private final CommentRepository commentRepository;
+    @Autowired
+    private final RescrapRepository rescrapRepository;
 
     @Transactional
     public ScrapCreateResponseDto create(Integer userId, ScrapCreateRequestDto dto){
@@ -156,6 +158,8 @@ public class ScrapService {
         }
         //2. 스크랩 삭제
         commentRepository.deleteComment(scrapId);
+        rescrapRepository.deleteRescrap(scrapId);
+        scrapViewRepository.deleteScrapView(scrapId);
         scrapRepository.delete(target);
         //3. 삭제 스크랩을 DTO로 변환 및 반환
         return ScrapDto.createScrapDto(target);
