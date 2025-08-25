@@ -72,24 +72,16 @@ public class FriendApiController {
                                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer currentUserId = userDetails.getUserId();
 
-        // 1) 자기 자신: 내 스크랩(전체) 반환
-        if (currentUserId.equals(friendUserId)) {
-            List<ScrapListDto> mine = scrapService.getPublicScraps(currentUserId, favorite, categoryId);
-            return ResponseEntity.ok(mine);
-        }
-
         //친구 관계 확인
         boolean isFriend = friendService.checkFriendship(currentUserId, friendUserId);
-        List<ScrapListDto> publics = scrapService.getPublicScraps(friendUserId, favorite, categoryId);
-        if (isFriend) {
-            // 친구라면 공개글만/혹은 정책에 따라 friend-visible 로직 사용
-            return ResponseEntity.ok(publics);
-        } else {
-            if (publics != null && !publics.isEmpty()) {
-                return ResponseEntity.ok(publics);  // 비친구도 공개글은 OK
-            }
-            // 공개글도 없으면 금지
+        if (!isFriend) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        List<ScrapListDto> friendScraps = scrapService.getPublicScraps(friendUserId, favorite, categoryId);
+        if (friendScraps == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(friendScraps);
     }
+
 }

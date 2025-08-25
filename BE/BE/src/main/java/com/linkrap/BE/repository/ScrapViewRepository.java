@@ -49,7 +49,7 @@ public interface ScrapViewRepository extends JpaRepository<ScrapView, Integer> {
     @Query("""
         delete
         from ScrapView sv
-        where sv.scrap.scrapId=:scrapId
+        where sv.scrapId.scrapId=:scrapId
     """)
     void deleteScrapView(@Param("scrapId") Integer scrapId);
 }
