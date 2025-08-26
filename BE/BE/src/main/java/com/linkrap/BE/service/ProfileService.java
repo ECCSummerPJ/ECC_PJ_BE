@@ -91,25 +91,9 @@ public class ProfileService {
         }
 
         // 비밀번호
-        boolean wantsPwChange = (dto.getCurrentPassword() != null && !dto.getCurrentPassword().isBlank())
-                || (dto.getNewPassword() != null && !dto.getNewPassword().isBlank());
+        boolean wantsPwChange = dto.getNewPassword() != null && !dto.getNewPassword().isBlank();
         if (wantsPwChange) {
-            if (dto.getCurrentPassword() == null || dto.getNewPassword() == null) {
-                throw new IllegalArgumentException("비밀번호 변경 시 현재/새 비밀번호를 모두 입력하세요.");
-            }
-
-            String saved = user.getPasswordHash();
-            String current = dto.getCurrentPassword().trim(); // 앞뒤 공백 제거
-            String newPw   = dto.getNewPassword().trim();
-
-            // 저장된 비번이 bcrypt면 matches, 아니면(옛 데이터) 평문 비교
-            boolean matched = (saved != null && saved.startsWith("$2"))
-                    ? passwordEncoder.matches(current, saved)
-                    : current.equals(saved);
-
-            if (!matched) {
-                throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-            }
+            String newPw = dto.getNewPassword().trim();
 
             // 비밀번호 작성 제한 체크
             validatePassword(newPw);
